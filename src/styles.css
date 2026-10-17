@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "@xyflow/react/dist/style.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -168,3 +169,22 @@
 @keyframes edgeflow { to { stroke-dashoffset: -28; } }
 @keyframes fadeup { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @utility animate-fadeup { animation: fadeup .5s ease-out both; }
+
+.a2a-map .react-flow {
+  --xy-background-color: var(--background);
+  --xy-edge-stroke: var(--muted-foreground);
+  --xy-edge-stroke-selected: var(--primary);
+  --xy-handle-background-color: var(--muted-foreground);
+  --xy-handle-border-color: var(--background);
+  --xy-controls-button-background-color: var(--popover);
+  --xy-controls-button-background-color-hover: var(--secondary);
+  --xy-controls-button-color: var(--foreground);
+  --xy-controls-button-color-hover: var(--foreground);
+  --xy-controls-button-border-color: var(--border);
+  --xy-controls-box-shadow: none;
+}
+.graph-edge-label { position: absolute; pointer-events: all; }
+.a2a-map .react-flow__edge-path { transition: stroke 150ms, stroke-width 150ms; }
+@media (prefers-reduced-motion: reduce) {
+  .a2a-map .react-flow__edge-path { transition: none; }
+}

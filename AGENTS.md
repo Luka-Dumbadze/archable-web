@@ -15,3 +15,4 @@
 - Owner customer testing uses the externally maintained useTryTurn hook without editing either owner helper; why: UI changes must preserve the external request and conversation lifecycle contract.
 - Customer-test detail paths use a non-nested /dev/turns/$id route with an unavailable state until a detail-read contract exists; why: supplied links must resolve without inventing a data endpoint.
 - AppShell wraps the outlet inside QueryClientProvider and boots the unchanged shell hook once; ready branding updates the primary CSS token with cleanup, while Workspace and OwnerMode read the shared snapshot so staged updates apply only on navigation.
+- Developer graph and inspector presentation live in components/archable and consume unchanged src/dev hooks; the map is dynamically loaded behind ClientOnly to keep graph libraries out of SSR, and supplied ELK positions are never recomputed by presentation code.
