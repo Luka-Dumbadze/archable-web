@@ -1,4 +1,4 @@
-// Copied from archable@fe11a07:packages/contracts/src/index.ts. Do not edit here.
+// Copied from archable@e6ae142:packages/contracts/src/index.ts. Do not edit here.
 // packages/contracts/src/index.ts: types shared by the API and the shell. The shell imports only this package.
 
 export type Tier = 0 | 1 | 2 | 3 | 4;
@@ -117,3 +117,10 @@ export interface Manifest {
   extension_url: string | null;
   topic: string;                     // 'tenant:<id>'
 }
+
+// ── Owner conversation (plan §8.4 addition): what a button is, so the web and Telegram render the same choices ──
+
+export type OwnerButton =
+  | { label: string; action: 'url'; url: string }
+  | { label: string; action: 'post'; path: string; body: Record<string, unknown> };
+export interface OwnerReply { text: string; buttons: OwnerButton[] }
