@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ReactFlow, Background, Controls, Handle, Position, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
+import { ReactFlow, Background, Controls, Handle, Position, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type NodeProps, type ReactFlowInstance } from "@xyflow/react";
 import { Search } from "lucide-react";
 import { useA2A, useEdgePulses } from "@/dev/use-a2a";
 import type { A2AEdgeData, A2ANodeData } from "@/dev/layout";
@@ -38,7 +38,7 @@ export function roundedPath(points: Point[], radius = 8): string {
 }
 
 const SelectEdge = createContext<(id: string) => void>(() => {});
-export function ConnectionEdge(props: EdgeProps<Node, Edge<A2AEdgeData>>) {
+export function ConnectionEdge(props: EdgeProps<Edge<A2AEdgeData>>) {
   const select = useContext(SelectEdge);
   const points = props.data?.points ?? [];
   const box = props.data?.label ?? null;
