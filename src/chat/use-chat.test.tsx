@@ -2,6 +2,8 @@ import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useChat } from "./use-chat";
 import { ChatUnavailable, chatClient, loadGreeting, tenantFromHost } from "./session";
+import type { ChatClient } from "./session";
+import type { Mock } from "vitest";
 import type { ChatMessage } from "@/contracts";
 
 vi.mock("./session", async (original) => ({
@@ -12,7 +14,7 @@ vi.mock("./session", async (original) => ({
 const message = (id: number, author: ChatMessage["author"], text: string): ChatMessage => ({ id, author, text, at: "now" });
 let deliver: (messages: ChatMessage[]) => void;
 let signal: AbortSignal | undefined;
-let client: { start: ReturnType<typeof vi.fn>; send: ReturnType<typeof vi.fn>; poll: ReturnType<typeof vi.fn> };
+let client: { [K in keyof ChatClient]: Mock<ChatClient[K]> };
 
 beforeEach(() => {
   vi.mocked(tenantFromHost).mockReturnValue({ slug: "marani", env: "pr-58" });
@@ -20,11 +22,11 @@ beforeEach(() => {
   client = {
     start: vi.fn().mockResolvedValue({ resumed: true, messages: [message(1, "agent", "History")] }),
     send: vi.fn().mockResolvedValue({ messages: [], pending: false }),
-    poll: vi.fn().mockImplementation((abortSignal: AbortSignal) => {
+    poll: vi.fn().mockImplementation((abortSignal?: AbortSignal) => {
       signal = abortSignal;
       return new Promise<ChatMessage[]>((resolve, reject) => {
         deliver = resolve;
-        abortSignal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
+        abortSignal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
       });
     }),
   };
