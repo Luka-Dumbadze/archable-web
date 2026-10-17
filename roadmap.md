@@ -1,0 +1,3 @@
+- [x] Connect browser-only tenant chat, greeting, history, polling, sending, and errors without changing the externally maintained files.
+- [x] Verify demo mode, API-contract behavior, cleanup, and 360 px layout.
+- [ ] Verify against the live API: blocked because api.archable.run does not resolve from this environment.

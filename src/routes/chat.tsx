@@ -5,6 +5,7 @@ import { Boxes, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BUSINESSES, getBusiness } from "@/lib/businesses";
 import { chatSearch } from "@/lib/biz-search";
+import { useChat } from "@/chat/use-chat";
 
 export const Route = createFileRoute("/chat")({
   validateSearch: zodValidator(chatSearch),
@@ -21,41 +22,45 @@ export const Route = createFileRoute("/chat")({
   component: Chat,
 });
 
-type Msg = { from: "me" | "bot"; text: string };
-
 function Chat() {
-  const { biz, embed } = Route.useSearch();
-  const b = getBusiness(biz) ?? BUSINESSES[0]!;
-  const [msgs, setMsgs] = useState<Msg[]>([{ from: "bot", text: `Hi! Welcome to ${b.name}. How can I help?` }]);
+  const { biz, embed, lang } = Route.useSearch();
+  const b = getBusiness(biz) ?? BUSINESSES[0];
+  const { messages, greeting, tenantName, error, pending, send: sendMessage } = useChat(b?.name ?? "Archable", lang);
+  const name = tenantName ?? b?.name ?? "Archable";
   const [draft, setDraft] = useState("");
   const end = useRef<HTMLDivElement>(null);
-  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, greeting, pending, error]);
 
   const send = () => {
     const text = draft.trim();
     if (!text) return;
     setDraft("");
-    setMsgs((m) => [...m, { from: "me", text }]);
-    setTimeout(() => setMsgs((m) => [...m, { from: "bot", text: "Got it — a teammate will confirm shortly." }]), 600);
+    void sendMessage(text);
   };
 
   return (
     <div className="flex h-dvh flex-col">
       {embed ? (
         <header className="flex items-center justify-between border-b px-4 py-3">
-          <span className="text-sm font-medium">{b.emoji} {b.name}</span>
-          <button aria-label="Close" onClick={() => window.parent.postMessage({ type: "archable:close" }, "*")} className="rounded p-1 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>
+          <span className="min-w-0 break-words text-sm font-medium">{!tenantName && b?.emoji} {name}</span>
+          <Button variant="ghost" size="icon" aria-label="Close" onClick={() => window.parent.postMessage({ type: "archable:close" }, "*")} className="shrink-0 text-muted-foreground"><X className="size-4" /></Button>
         </header>
       ) : (
         <header className="flex items-center gap-2 border-b px-4 py-3 text-sm">
           <Link to="/" className="flex items-center gap-2 font-semibold"><Boxes className="size-4 text-primary" />Archable</Link>
-          <span className="text-muted-foreground">/ {b.name}</span>
+          <span className="min-w-0 break-words text-muted-foreground">/ {name}</span>
         </header>
       )}
-      <main className="mx-auto w-full max-w-xl flex-1 space-y-3 overflow-auto p-4">
-        {msgs.map((m, i) => (
-          <div key={i} className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm ${m.from === "me" ? "ml-auto bg-primary text-primary-foreground" : "bg-secondary"}`}>{m.text}</div>
+      <main className="mx-auto min-h-0 w-full max-w-xl flex-1 space-y-3 overflow-auto p-4" aria-live="polite">
+        {greeting && <div className="max-w-[80%] rounded-2xl bg-secondary px-3.5 py-2 text-sm [overflow-wrap:anywhere]">{greeting}</div>}
+        {messages.map((m) => (
+          <div key={m.key} className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm [overflow-wrap:anywhere] ${m.author === "customer" ? "ml-auto bg-primary text-primary-foreground" : "bg-secondary"}`}>
+            {m.author === "staff" && <span className="mb-1 block text-xs text-muted-foreground">Staff</span>}
+            {m.text}
+          </div>
         ))}
+        {pending && <div className="text-xs text-muted-foreground" role="status">typing…</div>}
+        {error && <p role="alert" className="text-sm text-muted-foreground">{error}</p>}
         <div ref={end} />
       </main>
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="mx-auto flex w-full max-w-xl gap-2 border-t p-3">
