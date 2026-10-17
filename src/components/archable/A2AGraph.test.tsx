@@ -47,8 +47,8 @@ describe("Developer map controls", () => {
   it("passes layout routes and label boxes through untouched (no lane offsets)", () => {
     ready(); render(<A2AGraph />);
     const edge = mock.flow.edges?.[0] as { data?: Record<string, unknown> };
-    expect(edge.data?.points).toEqual(ROUTE);
-    expect(edge.data?.label).toEqual(LABEL);
+    expect(edge.data?.["points"]).toEqual(ROUTE);
+    expect(edge.data?.["label"]).toEqual(LABEL);
     expect(edge.data).not.toHaveProperty("lane");
   });
   it.each(["allow", "deny"] as const)("highlights %s pulses while preserving supplied dash styling", (decision) => {
