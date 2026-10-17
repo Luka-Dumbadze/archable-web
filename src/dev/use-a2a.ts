@@ -3,7 +3,8 @@
 // serve the compiled Marani fixture, so the screen is always demonstrable. Every load ends: data or a reason.
 import { useEffect, useRef, useState } from "react";
 import type { Edge, Node } from "@xyflow/react";
-import type { A2AGraph, EdgeDetail } from "@/contracts";
+import type { A2AEdge, A2AGraph, EdgeCall, EdgeDetail } from "@/contracts";
+import type { ToolCallEvent } from "@/shell/shell";
 import { supabase } from "@/lib/supabase";
 import { tenantFromHost } from "@/chat/session";
 import { shell } from "@/shell/use-shell";
@@ -39,7 +40,23 @@ export function useA2A(): Load<LaidOutGraph> & { reload: () => void } {
   return { ...load, reload: () => setN((x) => x + 1) };
 }
 
-/** The inspector's data for one edge; idle while edgeId is null (panel closed). */
+/** Does this live call travel on this edge? Tool/MCP edges carry their tool; event edges are the trigger's calls. */
+export const callOnEdge = (e: A2AEdge, c: ToolCallEvent) => (e.kind === "event" ? c.caller === `trigger:${e.via}` : c.tool === e.via);
+
+/** Folds one live call into an EdgeDetail: counts go up and the call heads the recent list (at most 20). */
+export function withLiveCall(d: EdgeDetail, c: ToolCallEvent, at = new Date().toISOString()): EdgeDetail {
+  if (!callOnEdge(d.edge, c) || d.recent.some((r) => r.id === c.id)) return d;
+  const call: EdgeCall = { id: c.id, at, caller: c.caller, tool: c.tool, decision: c.decision, status: c.status,
+                           latency_ms: c.latency_ms, policies: [], turn_id: c.turn_id };   // policy ids aren't broadcast
+  return {
+    ...d,
+    stats: { ...d.stats, calls: d.stats.calls + 1, denied: d.stats.denied + (c.decision === "deny" ? 1 : 0),
+             errors: d.stats.errors + (c.status === "error" ? 1 : 0) },
+    recent: [call, ...d.recent].slice(0, 20),
+  };
+}
+
+/** The inspector's data for one edge; idle while edgeId is null (panel closed). Live calls update it in place. */
 export function useEdgeDetail(edgeId: string | null): Load<EdgeDetail> | { state: "idle" } {
   const [load, setLoad] = useState<Load<EdgeDetail> | { state: "idle" }>({ state: "idle" });
   useEffect(() => {
@@ -55,7 +72,9 @@ export function useEdgeDetail(edgeId: string | null): Load<EdgeDetail> | { state
       const r = await fetchEdgeDetail(supabase, edgeId);
       if (live) setLoad(r.ok ? { state: "ready", data: r.data, demo: false } : { state: "failed", reason: r.reason });
     })();
-    return () => { live = false; };
+    const off = shell().onToolCall((c) =>
+      setLoad((l) => (l.state === "ready" && l.data.edge.id === edgeId ? { ...l, data: withLiveCall(l.data, c) } : l)));
+    return () => { live = false; off(); };
   }, [edgeId]);
   return load;
 }

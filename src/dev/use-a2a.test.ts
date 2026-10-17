@@ -11,7 +11,7 @@ vi.mock("@/chat/session", async (orig) => ({ ...(await orig<typeof import("@/cha
 vi.mock("@/shell/use-shell", () => ({ shell: () => ({ onToolCall: (l: (e: ToolCallEvent) => void) => { feed.listeners.add(l); return () => feed.listeners.delete(l); } }) }));
 vi.mock("@/lib/supabase", () => ({ supabase: {} }));
 vi.mock("./api", async (orig) => ({ ...(await orig<typeof import("./api")>()), fetchA2A: api.a2a, fetchEdgeDetail: api.edge }));
-const { PULSE_MS, useA2A, useEdgeDetail, useEdgePulses } = await import("./use-a2a");
+const { PULSE_MS, useA2A, useEdgeDetail, useEdgePulses, withLiveCall } = await import("./use-a2a");
 
 const call = (tool: string, decision: "allow" | "deny" = "allow"): ToolCallEvent =>
   ({ id: 1, caller: "agent:cellar_master", tool, decision, status: decision === "deny" ? "denied" : "ok", latency_ms: 12, turn_id: "t" });
@@ -79,5 +79,30 @@ describe("useEdgePulses", () => {
     expect(feed.listeners.size).toBe(1);
     unmount();
     expect(feed.listeners.size).toBe(0);
+  });
+});
+
+describe("live calls in the inspector (P5.D1.3: a turn elsewhere increments the count)", () => {
+  const id = "tool:app:contact_center->app:quickshipper:delivery.status";
+  it("a matching call raises calls/denied and heads the recent list; other tools change nothing", async () => {
+    const { result } = renderHook(() => useEdgeDetail(id));
+    await waitFor(() => expect(result.current.state).toBe("ready"));
+    const before = (result.current as { data: { stats: { calls: number; denied: number } } }).data.stats;
+    act(() => { for (const l of feed.listeners) l({ ...call("delivery.status", "deny"), id: 77001 }); });
+    act(() => { for (const l of feed.listeners) l({ ...call("order.create"), id: 77002 }); });
+    const after = (result.current as { data: { stats: { calls: number; denied: number }; recent: { id: number }[] } }).data;
+    expect(after.stats.calls).toBe(before.calls + 1);
+    expect(after.stats.denied).toBe(before.denied + 1);
+    expect(after.recent[0]?.id).toBe(77001);
+    expect(after.recent.length).toBeLessThanOrEqual(20);
+  });
+
+  it("event edges count their trigger's calls; a repeated broadcast isn't counted twice", () => {
+    const ev = maraniEdgeDetail("event:app:quickshipper->app:contact_center:notify_on_job_status")!;
+    const c = { ...call("customer.notify"), id: 5, caller: "trigger:notify_on_job_status" };
+    const once = withLiveCall(ev, c);
+    expect(once.stats.calls).toBe(ev.stats.calls + 1);
+    expect(withLiveCall(once, c)).toBe(once);
+    expect(withLiveCall(ev, { ...c, caller: "agent:cellar_master" })).toBe(ev);
   });
 });
