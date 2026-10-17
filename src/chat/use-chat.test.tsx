@@ -71,6 +71,7 @@ describe("chat page lifecycle", () => {
     let sending: Promise<void> = Promise.resolve();
     act(() => { sending = result.current.send("Hello"); });
     expect(result.current.messages.at(-1)?.text).toBe("Hello");
+    await waitFor(() => expect(client.send).toHaveBeenCalled());
     await act(async () => {
       finish({ messages: [message(2, "customer", "Hello"), message(3, "agent", "Reply")], pending: false });
       await sending;
