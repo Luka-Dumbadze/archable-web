@@ -30,9 +30,9 @@ function api(start: Manifest) {
 
 // Supabase Realtime: captures the channel options, the epoch_flip handler and the status callback.
 function realtime(session: { access_token: string } | null = { access_token: "jwt-owner" }) {
-  const rt: { topic?: string; opts?: unknown; flip?: (m: { payload?: { epoch?: unknown; digest?: unknown } }) => void; status?: (s: string) => void; removed: boolean } = { removed: false };
+  const rt: { toolCall?: (m: { payload?: unknown }) => void; topic?: string; opts?: unknown; flip?: (m: { payload?: { epoch?: unknown; digest?: unknown } }) => void; status?: (s: string) => void; removed: boolean } = { removed: false };
   const channel = {
-    on: vi.fn((_type: string, filter: { event: string }, cb: (m: { payload?: { epoch?: unknown; digest?: unknown } }) => void) => { if (filter.event === "epoch_flip") rt.flip = cb; return channel; }),
+    on: vi.fn((_type: string, filter: { event: string }, cb: (m: { payload?: any }) => void) => { if (filter.event === "epoch_flip") rt.flip = cb; if (filter.event === "tool_call") rt.toolCall = cb; return channel; }),
     subscribe: vi.fn((cb: (s: string) => void) => { rt.status = cb; return channel; }),
   };
   const client = {
@@ -146,5 +146,24 @@ describe("epoch_flip", () => {
     const { r, s } = await booted();
     await s.dispose();
     expect(r.rt.removed).toBe(true);
+  });
+});
+
+describe("tool_call fan-out", () => {
+  it("passes well-formed tool calls to listeners on the same channel, drops malformed ones, and unsubscribes", async () => {
+    const a = api(manifest(7, "sha256:aaa"));
+    const r = realtime();
+    const s = createShell({ supabase: r.client, fetch: a.fetchImpl });
+    await s.boot();
+    expect(r.client.channel).toHaveBeenCalledTimes(1);
+    const got: string[] = [];
+    const off = s.onToolCall((e) => got.push(`${e.tool}:${e.decision}`));
+    r.rt.toolCall?.({ payload: { id: 1, caller: "agent:cellar_master", tool: "delivery.status", decision: "deny", status: "denied", latency_ms: 9, turn_id: "t" } });
+    r.rt.toolCall?.({ payload: { tool: 5, decision: "allow" } });
+    r.rt.toolCall?.({ payload: { tool: "x", decision: "maybe" } });
+    r.rt.toolCall?.({});
+    off();
+    r.rt.toolCall?.({ payload: { tool: "delivery.status", decision: "allow" } });
+    expect(got).toEqual(["delivery.status:deny"]);
   });
 });

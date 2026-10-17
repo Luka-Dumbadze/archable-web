@@ -24,10 +24,17 @@ export interface ShellDeps {
 
 type Staged = { manifest: Manifest; ui: unknown };
 
+/** A tool_calls row as broadcast on tenant:<id> (migration 20261018000000, private.tool_calls_broadcast). */
+export interface ToolCallEvent {
+  id: number; caller: string; tool: string; decision: "allow" | "deny";
+  status: "ok" | "error" | "denied" | "simulated"; latency_ms: number | null; turn_id: string | null;
+}
+
 export function createShell(d: ShellDeps) {
   const f = d.fetch ?? ((input: RequestInfo | URL, init?: RequestInit) => fetch(input, init));
   const uiCache = new Map<string, unknown>();
   const listeners = new Set<() => void>();
+  const toolCallListeners = new Set<(e: ToolCallEvent) => void>();
   let snap: ShellSnapshot = { status: "booting", manifest: null, ui: null, pendingEpoch: null, live: false };
   let pending: Staged | null = null;
   let channel: RealtimeChannel | null = null;
@@ -76,6 +83,11 @@ export function createShell(d: ShellDeps) {
     await sb.realtime.setAuth(data.session.access_token);
     channel = sb.channel(topic, { config: { private: true } })
       .on("broadcast", { event: "epoch_flip" }, (msg: { payload?: { epoch?: unknown } }) => onFlip(msg.payload ?? {}))
+      .on("broadcast", { event: "tool_call" }, (msg: { payload?: Partial<ToolCallEvent> }) => {
+        const e = msg.payload;
+        if (!e || typeof e.tool !== "string" || (e.decision !== "allow" && e.decision !== "deny")) return;
+        for (const l of toolCallListeners) l(e as ToolCallEvent);
+      })
       .subscribe((status) => {
         set({ live: status === "SUBSCRIBED" });
         if (status === "SUBSCRIBED") onFlip({});               // catch a flip that happened while (re)connecting
@@ -98,6 +110,12 @@ export function createShell(d: ShellDeps) {
       return snap;
     },
 
+    /** Live tool calls on this tenant (Developer Mode's graph pulses). One channel serves both events. */
+    onToolCall(l: (e: ToolCallEvent) => void): () => void {
+      toolCallListeners.add(l);
+      return () => { toolCallListeners.delete(l); };
+    },
+
     /** Call on navigation: shows the newer epoch if one is staged. Returns whether it swapped. */
     applyPending(): boolean {
       if (!pending) return false;
@@ -111,6 +129,7 @@ export function createShell(d: ShellDeps) {
       if (channel && d.supabase) await d.supabase.removeChannel(channel);
       channel = null;
       listeners.clear();
+      toolCallListeners.clear();
     },
   };
 }

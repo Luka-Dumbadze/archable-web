@@ -8,7 +8,8 @@ import { tenantFromHost } from "@/chat/session";
 import { createShell, type Shell, type ShellSnapshot } from "./shell";
 
 let shared: Shell | null = null;
-const shell = () => (shared ??= createShell({ supabase }));
+/** The one shell store per page (also used by Developer Mode for live tool calls). */
+export const shell = () => (shared ??= createShell({ supabase }));
 
 const SERVER: ShellSnapshot = { status: "booting", manifest: null, ui: null, pendingEpoch: null, live: false };
 
