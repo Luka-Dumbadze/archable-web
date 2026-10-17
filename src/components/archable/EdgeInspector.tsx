@@ -29,7 +29,8 @@ export function EdgeInspector({ edge, graph, onClose }: { edge: A2AEdge | null; 
             {data.edge.kind === "event" ? <p className="text-sm text-muted-foreground">This is an event; it has no tool contract.</p> : data.contract ? <>
               <p className="text-xs text-muted-foreground">{data.contract.description}</p>
               <SchemaTree label="Input" value={data.contract.input} open />
-              <SchemaTree label="Output" value={data.contract.output} open />
+              {data.contract.output === null ? <p className="py-1 font-mono text-xs text-muted-foreground">Output: No output</p> : <SchemaTree label="Output" value={data.contract.output} open />}
+              <p className="font-mono text-[11px] text-muted-foreground">{data.contract.operation_id}</p>
             </> : <p className="text-sm text-muted-foreground">No contract is available.</p>}
           </section>
           <section>
