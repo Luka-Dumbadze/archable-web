@@ -49,7 +49,7 @@ export function OwnerMode({ b }: { b: Business }) {
 }
 
 function Retail({ b }: { b: Business }) {
-  const [active, setActive] = useState(b.chats![0].id);
+  const [active, setActive] = useState(b.chats![0]!.id);
   const [chats, setChats] = useState(b.chats!);
   const [draft, setDraft] = useState("");
   const [orders, setOrders] = useState<Order[]>(b.orders!);

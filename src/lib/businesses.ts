@@ -130,7 +130,7 @@ export const BUSINESSES: Business[] = [
 
 export function inferBusiness(prompt: string): Business {
   const p = prompt.toLowerCase();
-  if (/(dent|clinic|doctor|patient|medic|salon|appointment)/.test(p)) return BUSINESSES[2];
-  if (/(wine|marani|cellar|bar|liquor)/.test(p)) return BUSINESSES[1];
-  return BUSINESSES[0];
+  if (/(dent|clinic|doctor|patient|medic|salon|appointment)/.test(p)) return BUSINESSES[2]!;
+  if (/(wine|marani|cellar|bar|liquor)/.test(p)) return BUSINESSES[1]!;
+  return BUSINESSES[0]!;
 }

@@ -68,7 +68,7 @@ export function Genesis({ onLaunch }: { onLaunch: (b: Business) => void }) {
         </div>
 
         <div className="mt-5 flex flex-wrap justify-center gap-2">
-          {[BUSINESSES[1], BUSINESSES[0], BUSINESSES[2]].map((b) => (
+          {(["marani","flora","smilecare"].map((id) => BUSINESSES.find((x) => x.id === id)!)).map((b) => (
             <button key={b.id} disabled={!!compiling} onClick={() => compile(b, b.prompt)}
               className="rounded-full border bg-secondary px-3 py-1.5 text-sm transition hover:border-primary/60 hover:bg-accent disabled:opacity-50">
               {b.emoji} {b.id === "marani" ? "Wine Boutique" : b.id === "flora" ? "Flower Delivery" : "Dental Clinic"} <span className="text-muted-foreground">({b.name})</span>
