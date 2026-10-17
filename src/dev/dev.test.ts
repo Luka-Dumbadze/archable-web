@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { fetchA2A, fetchEdgeDetail } from "./api";
-import { edgeWidth, layoutA2A, nodeSubtitle } from "./layout";
+import { edgeWidth, labelSize, layoutA2A, LABEL_MAX_W, nodeSubtitle } from "./layout";
 import { MARANI_A2A, MARANI_TOOLS, maraniEdgeDetail } from "./fixtures/marani";
 
 describe("Marani fixture (compiler output, plan §1.2)", () => {
@@ -74,6 +74,36 @@ describe("layoutA2A", () => {
   it("drops an edge to a node that isn't in the graph instead of failing", async () => {
     const g = { nodes: MARANI_A2A.nodes, edges: [...MARANI_A2A.edges, { ...MARANI_A2A.edges[0]!, id: "x", to: "conn:missing" }] };
     expect((await layoutA2A(g)).edges.map((e) => e.id)).not.toContain("x");
+  });
+
+  it("ELK places every label: none on a node card, none on another label", async () => {
+    const { nodes, edges } = await layoutA2A(MARANI_A2A);
+    type Box = { x: number; y: number; w: number; h: number; name: string };
+    const nb: Box[] = nodes.map((n) => ({ x: n.position.x, y: n.position.y, w: n.width!, h: n.height!, name: n.id }));
+    const lb: Box[] = edges.map((e) => { const l = e.data!.label!; expect(l).not.toBeNull(); return { x: l.x, y: l.y, w: l.width, h: l.height, name: e.data!.edge.via }; });
+    const overlap = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    for (const l of lb) for (const n of nb) expect(overlap(l, n), `${l.name} on ${n.name}`).toBe(false);
+    for (let i = 0; i < lb.length; i++) for (let j = i + 1; j < lb.length; j++) expect(overlap(lb[i]!, lb[j]!), `${lb[i]!.name} on ${lb[j]!.name}`).toBe(false);
+  });
+
+  it("each edge has an ELK route from its source card's right side to its target's left side", async () => {
+    const { nodes, edges } = await layoutA2A(MARANI_A2A);
+    const at = Object.fromEntries(nodes.map((n) => [n.id, n]));
+    for (const e of edges) {
+      const pts = e.data!.points;
+      expect(pts.length).toBeGreaterThanOrEqual(2);
+      const s = at[e.source]!, t = at[e.target]!;
+      const near = (x: number, y: number, n: typeof s) => x >= n.position.x - 1 && x <= n.position.x + n.width! + 1 && y >= n.position.y - 1 && y <= n.position.y + n.height! + 1;
+      expect(near(pts[0]!.x, pts[0]!.y, s), `${e.id} starts on its source`).toBe(true);
+      expect(near(pts.at(-1)!.x, pts.at(-1)!.y, t), `${e.id} ends on its target`).toBe(true);
+    }
+  });
+
+  it("label sizes wrap long labels at the max width", () => {
+    expect(labelSize("MCP: delivery.dispatch")).toEqual({ width: 156, height: 24 });
+    const long = labelSize("A2A event: delivery_job.status → picked_up|delivered|failed");
+    expect(long.width).toBe(LABEL_MAX_W);
+    expect(long.height).toBeGreaterThan(24);
   });
 
   it("node cards: agent and tool count for apps, 'outside system' for external", () => {
