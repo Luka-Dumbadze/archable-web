@@ -31,7 +31,7 @@ export function OwnerMode({ b }: { b: Business }) {
     <div className="space-y-6">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:flex-wrap sm:justify-between">
         <div className="min-w-0">
-          <h2 className="truncate text-[22px] font-semibold">{b.emoji} {name}</h2>
+          <h2 className="break-words text-[22px] font-semibold [overflow-wrap:anywhere]">{b.emoji} {name}</h2>
         </div>
         <Button onClick={() => setOpen(true)}><Plus /> Request change</Button>
       </div>
