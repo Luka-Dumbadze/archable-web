@@ -1,4 +1,4 @@
-// Copied from archable@e6ae142:packages/contracts/src/index.ts. Do not edit here.
+// Copied from archable@d303e80:packages/contracts/src/index.ts. Do not edit here.
 // packages/contracts/src/index.ts: types shared by the API and the shell. The shell imports only this package.
 
 export type Tier = 0 | 1 | 2 | 3 | 4;
@@ -124,3 +124,12 @@ export type OwnerButton =
   | { label: string; action: 'url'; url: string }
   | { label: string; action: 'post'; path: string; body: Record<string, unknown> };
 export interface OwnerReply { text: string; buttons: OwnerButton[] }
+
+// ── Web chat widget (plan §6.5, + embed_origins per decision Q3) ──
+
+export interface WidgetConfig {                 // public projection of spec channels.web_chat + ui.theme
+  greeting: Record<string, string>;
+  launcher: { label: Record<string, string>; position: 'left' | 'right' };
+  brand: string;                                // '#7B1E3A'
+  embed_origins: string[];                      // sites allowed to frame /chat (frame-ancestors); [] = only *.archable.run
+}
