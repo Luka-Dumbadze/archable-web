@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from "sonner";
 import type { Business, Order } from "@/lib/businesses";
 import { TryAsCustomer } from "./TryAsCustomer";
+import { useShell } from "@/shell/use-shell";
 
 function Panel({ title, icon: I, children, className = "" }: { title: string; icon: React.ElementType; children: React.ReactNode; className?: string }) {
   return (
@@ -24,11 +25,13 @@ const Pill = ({ s }: { s: string }) => <span className={`rounded border px-1.5 p
 export function OwnerMode({ b }: { b: Business }) {
   const [open, setOpen] = useState(false);
   const [req, setReq] = useState("");
+  const { status, manifest } = useShell();
+  const name = status === "ready" && manifest ? manifest.os_name : b.name;
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:flex-wrap sm:justify-between">
         <div className="min-w-0">
-          <h2 className="truncate text-[22px] font-semibold">{b.emoji} {b.name}</h2>
+          <h2 className="truncate text-[22px] font-semibold">{b.emoji} {name}</h2>
         </div>
         <Button onClick={() => setOpen(true)}><Plus /> Request change</Button>
       </div>
