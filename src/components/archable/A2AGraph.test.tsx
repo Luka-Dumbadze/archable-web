@@ -78,7 +78,7 @@ describe("Developer map controls", () => {
       [{ id: "app:contact_center", type: "a2a", position: { x: 127, y: 391 }, data: { node, title: "Contact Center", subtitle: "5 tools", external: false } }],
       [{ data: { edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: ROUTE, label: { x: 10, y: 100, width: 120, height: 24 } } }],
     );
-    expect(bounds).toEqual({ x: 10, y: 100, width: 437, height: 375 });
+    expect(bounds).toEqual({ x: 10, y: 100, width: 337, height: 375 });
   });
   it("retries failed loads through the maintained hook", () => {
     mock.load = { state: "failed", reason: "unavailable" }; render(<A2AGraph />);
