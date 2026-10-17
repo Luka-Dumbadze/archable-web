@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- Selected business lives in the URL as `?biz=<id>` on `/`, `/dev`, `/chat`; why: reloads and links keep state without storage.
+- Backend is the user's own external Supabase via `src/lib/supabase.ts` (publishable key only); why: Lovable Cloud must not be enabled and service-role keys are banned.

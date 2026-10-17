@@ -134,3 +134,28 @@ export function inferBusiness(prompt: string): Business {
   if (/(wine|marani|cellar|bar|liquor)/.test(p)) return BUSINESSES[1]!;
   return BUSINESSES[0]!;
 }
+
+// Extra agents per business — the graph sizes itself to each business.
+const EXTRA: Record<string, { nodes: Business["nodes"]; edges: Edge[] }> = {
+  flora: {
+    nodes: [{ id: "payments", label: "Payments", sub: "billing.agent" }],
+    edges: [{ id: "e4", from: "contact", to: "payments", tool: "pay.create_link", latency: 16, input: { order_id: "string", amount: "number", currency: "GEL" }, output: { url: "url", expires_at: "ISO8601" } }],
+  },
+  marani: {
+    nodes: [
+      { id: "payments", label: "Payments", sub: "billing.agent" },
+      { id: "events", label: "Tastings", sub: "events.agent" },
+    ],
+    edges: [
+      { id: "e4", from: "crm", to: "payments", tool: "pay.charge", latency: 21, input: { invoice_no: "string", method: "card | transfer" }, output: { status: "paid | pending" } },
+      { id: "e5", from: "contact", to: "events", tool: "events.book_seat", latency: 18, input: { customer_id: "string", date: "date", seats: "number" }, output: { booking_id: "string", seats_left: "number" } },
+    ],
+  },
+};
+for (const b of BUSINESSES) {
+  const x = EXTRA[b.id];
+  if (x) { b.nodes = [...b.nodes, ...x.nodes]; b.edges = [...b.edges, ...x.edges]; }
+}
+
+export const BIZ_IDS = ["flora", "marani", "smilecare"] as const;
+export const getBusiness = (id?: string) => BUSINESSES.find((b) => b.id === id);
