@@ -52,7 +52,7 @@ export default function A2AGraph() {
     return g.data.edges.map((e) => {
       const siblings = g.data.edges.filter((other) => [other.source, other.target].sort().join("|") === [e.source, e.target].sort().join("|"));
       const index = siblings.findIndex((other) => other.id === e.id);
-      const lane = siblings.length > 1 ? (index - (siblings.length - 1) / 2) * 110 : 0;
+      const lane = siblings.length > 1 ? 130 + index * 120 : 0;
       return { ...e, data: { ...e.data, lane }, ...(pulses[e.id] ? { style: { ...e.style, stroke: pulses[e.id] === "deny" ? "var(--destructive)" : "var(--primary)", strokeWidth: Number(e.style?.strokeWidth ?? 1.5) + 2 } } : {}) };
     });
   }, [g, pulses]);
@@ -65,7 +65,10 @@ export default function A2AGraph() {
     </ReactFlow></SelectEdge.Provider>
     <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-24px)] items-center gap-2 rounded-md border bg-background px-3 py-2"><Search className="size-3.5 shrink-0 text-muted-foreground" /><input ref={search} aria-label="Search nodes" placeholder="Search nodes" value={query} onChange={(e) => setQuery(e.target.value)} className="min-w-0 w-36 bg-transparent text-xs outline-none" />{g.demo && <span className="shrink-0 border-l pl-2 text-[10px] text-muted-foreground">Sample data</span>}</div>
     {query.trim() && <div role="status" className="absolute left-3 top-16 rounded border bg-background px-2 py-1 text-xs text-muted-foreground">{nodes.filter((n) => n.selected).length} matches</div>}
-    <select aria-label="Inspect connection" value="" onChange={(e) => setSelected(e.target.value || null)} className="absolute bottom-3 right-3 max-w-[calc(100%-70px)] rounded-md border bg-background p-2 text-xs md:hidden"><option value="">Connections</option>{g.data.edges.map((e) => <option key={e.id} value={e.id}>{String(e.label)}</option>)}</select>
+    <details className="absolute bottom-3 right-3 w-[calc(100%-70px)] rounded-md border bg-background text-xs md:hidden">
+      <summary className="cursor-pointer px-3 py-2">Connections</summary>
+      <div className="max-h-64 overflow-y-auto border-t p-1">{g.data.edges.map((e) => <Button key={e.id} variant="ghost" className="h-auto w-full justify-start whitespace-normal px-2 py-2 text-left font-mono text-[11px]" onClick={() => setSelected(e.id)}>{e.label}</Button>)}</div>
+    </details>
     <EdgeInspector edge={edge} graph={g.data.graph} onClose={() => setSelected(null)} />
   </div>;
 }
