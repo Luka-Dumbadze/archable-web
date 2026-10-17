@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { GitPullRequest, Info, ExternalLink, ArrowRight } from "lucide-react";
+import { GitPullRequest, Info, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -10,9 +10,6 @@ const A2AGraph = lazy(() => import("./A2AGraph"));
 
 export function DevMode({ b }: { b: Business }) {
   const [why, setWhy] = useState<Desire | null>(null);
-
-  return () => clearInterval(t);
-  }, [b]);
 
   return (
     <div className="space-y-6">
