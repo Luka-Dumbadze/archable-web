@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as DevRouteImport } from './routes/dev'
 import { Route as SigninRouteImport } from './routes/signin'
+import { Route as DevTurnsIdRouteImport } from './routes/dev_.turns.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const SigninRoute = SigninRouteImport.update({
   path: '/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevTurnsIdRoute = DevTurnsIdRouteImport.update({
+  id: '/dev_/turns/$id',
+  path: '/dev/turns/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/dev': typeof DevRoute
   '/signin': typeof SigninRoute
+  '/dev/turns/$id': typeof DevTurnsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/dev': typeof DevRoute
   '/signin': typeof SigninRoute
+  '/dev/turns/$id': typeof DevTurnsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/dev': typeof DevRoute
   '/signin': typeof SigninRoute
+  '/dev_/turns/$id': typeof DevTurnsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/dev' | '/signin'
+  fullPaths: '/' | '/chat' | '/dev' | '/signin' | '/dev/turns/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/dev' | '/signin'
-  id: '__root__' | '/' | '/chat' | '/dev' | '/signin'
+  to: '/' | '/chat' | '/dev' | '/signin' | '/dev/turns/$id'
+  id: '__root__' | '/' | '/chat' | '/dev' | '/signin' | '/dev_/turns/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   DevRoute: typeof DevRoute
   SigninRoute: typeof SigninRoute
+  DevTurnsIdRoute: typeof DevTurnsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SigninRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev_/turns/$id': {
+      id: '/dev_/turns/$id'
+      path: '/dev/turns/$id'
+      fullPath: '/dev/turns/$id'
+      preLoaderRoute: typeof DevTurnsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   DevRoute: DevRoute,
   SigninRoute: SigninRoute,
+  DevTurnsIdRoute: DevTurnsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

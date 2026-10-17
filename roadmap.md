@@ -1,3 +1,6 @@
+- [x] Add the Owner Mode customer console using unchanged helpers; verify sending, reset, and desktop/360 px layout with test responses (17 tests pass).
+- [ ] Verify live customer-console replies: requires owner sign-in and a reachable external service; successful browser checks used test-only sign-in and replies.
+- [ ] Show live conversation details: blocked until the external service supplies a detail-read contract; supplied links resolve to an unavailable-details page.
 - [x] Connect browser-only tenant chat, greeting, history, polling, sending, and errors without changing the externally maintained files.
 - [x] Verify demo mode, API-contract behavior, cleanup, and 360 px layout.
 - [ ] Verify against the live API: blocked because api.archable.run does not resolve from this environment.
