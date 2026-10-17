@@ -18,7 +18,7 @@ function AppNode({ data, selected }: NodeProps<Node<A2ANodeData>>) {
 const SelectEdge = createContext<(id: string) => void>(() => {});
 function ConnectionEdge(props: EdgeProps) {
   const select = useContext(SelectEdge);
-  const lane = typeof props.data?.lane === "number" ? props.data.lane : 0;
+  const lane = typeof props.data?.["lane"] === "number" ? props.data["lane"] : 0;
   const [defaultPath, defaultX, defaultY] = getSmoothStepPath(props);
   const path = lane ? `M ${props.sourceX} ${props.sourceY} C ${props.sourceX} ${props.sourceY + lane}, ${props.targetX} ${props.targetY + lane}, ${props.targetX} ${props.targetY}` : defaultPath;
   const x = lane ? (props.sourceX + props.targetX) / 2 : defaultX;
