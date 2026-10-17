@@ -8,4 +8,5 @@ export const bizSearch = z.object({
 export const chatSearch = z.object({
   biz: fallback(z.string(), "flora").default("flora"),
   embed: fallback(z.number(), 0).default(0),
+  lang: z.string().optional(),
 });

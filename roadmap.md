@@ -1,0 +1,2 @@
+- [ ] Connect browser-only tenant chat, greeting, history, polling, sending, and errors without changing the externally maintained files.
+- [ ] Verify demo mode, real-mode behavior, cleanup, and 360 px layout.
