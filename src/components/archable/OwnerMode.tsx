@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import type { Business, Order } from "@/lib/businesses";
+import { TryAsCustomer } from "./TryAsCustomer";
 
 function Panel({ title, icon: I, children, className = "" }: { title: string; icon: React.ElementType; children: React.ReactNode; className?: string }) {
   return (
@@ -61,8 +62,8 @@ function Retail({ b }: { b: Business }) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-      <Panel title="Inbox" icon={MessageSquare} className="h-[460px] lg:col-span-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <Panel title="Inbox" icon={MessageSquare} className="h-[460px]">
         <div className="grid h-full min-w-0 grid-cols-5">
           <div className="col-span-2 min-w-0 border-r">
             {chats.map((c) => (
@@ -86,7 +87,7 @@ function Retail({ b }: { b: Business }) {
           </div>
         </div>
       </Panel>
-      <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-3">
+      <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-2">
         <div className="grid h-full min-w-0 grid-cols-3 gap-3 p-3">
           {cols.map((col) => (
             <div key={col} className="min-w-0 rounded-lg bg-secondary/50 p-2">
@@ -107,7 +108,7 @@ function Retail({ b }: { b: Business }) {
           ))}
         </div>
       </Panel>
-      <Panel title="Catalog" icon={Package} className="lg:col-span-5">
+      <Panel title="Catalog" icon={Package} className="lg:col-span-2">
         <table className="w-full text-sm">
           <thead className="font-mono text-xs text-muted-foreground"><tr className="border-b">{["SKU", "Name", "", "₾", "Stock"].map((h) => <th key={h} className="px-4 py-2 text-left font-normal">{h}</th>)}</tr></thead>
           <tbody>{b.catalog!.map((c) => (
@@ -117,6 +118,7 @@ function Retail({ b }: { b: Business }) {
             </tr>))}</tbody>
         </table>
       </Panel>
+      <TryAsCustomer className="h-[460px] lg:col-start-2 lg:row-start-1" />
     </div>
   );
 }
@@ -172,6 +174,7 @@ function Clinic({ b }: { b: Business }) {
             </tr>))}</tbody>
         </table>
       </Panel>
+      <TryAsCustomer className="h-[460px] lg:col-span-5" />
     </div>
   );
 }
