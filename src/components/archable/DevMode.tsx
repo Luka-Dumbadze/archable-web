@@ -37,9 +37,9 @@ export function DevMode({ b }: { b: Business }) {
                   <circle r={4} fill="var(--primary-glow)">
                     <animateMotion dur="1.8s" repeatCount="indefinite" path={`M${a.x},${a.y} L${c.x},${c.y}`} />
                   </circle>
-                  <foreignObject x={mx - 80} y={my - 16} width={160} height={32}>
+                  <foreignObject x={mx - 110} y={my - 16} width={220} height={32}>
                     <div className="flex h-full items-center justify-center">
-                      <span className="rounded border border-primary/40 bg-background px-2 py-0.5 font-mono text-[11px] hover:border-primary">
+                      <span className="rounded border border-primary/40 bg-background px-2 py-0.5 whitespace-nowrap font-mono text-[11px] hover:border-primary">
                         {e.tool} <span className="text-success">{lat[e.id]}ms</span>
                       </span>
                     </div>
