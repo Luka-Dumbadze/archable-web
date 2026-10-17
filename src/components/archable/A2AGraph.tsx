@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ReactFlow, Background, Controls, Handle, Position, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, useStore, type Node, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
+import { ReactFlow, Background, Controls, Handle, Position, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
 import { Search } from "lucide-react";
 import { useA2A, useEdgePulses } from "@/dev/use-a2a";
 import type { A2AEdgeData, A2ANodeData } from "@/dev/layout";
