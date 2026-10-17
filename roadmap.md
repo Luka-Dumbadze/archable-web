@@ -1,4 +1,5 @@
 - [x] Connect browser-only tenant chat, greeting, history, polling, sending, and errors without changing the externally maintained files.
 - [x] Verify demo mode, API-contract behavior, cleanup, and 360 px layout.
 - [ ] Verify against the live API: blocked because api.archable.run does not resolve from this environment.
-- [ ] Add and verify the browser-only owner sign-in page and its 360 px layout without changing existing helpers.
+- [x] Add and verify the browser-only owner sign-in page and its 360 px layout without changing existing helpers.
+- [ ] Verify live owner sign-in: requires a valid one-time Telegram link; lifecycle and navigation verified with test responses only.
