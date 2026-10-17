@@ -24,7 +24,7 @@ function Index() {
   return (
     <>
       {biz ? <Workspace business={biz} onSwitch={setBiz} onBack={() => setBiz(null)} /> : <Genesis onLaunch={setBiz} />}
-      <Toaster theme="dark" />
+      <Toaster />
     </>
   );
 }

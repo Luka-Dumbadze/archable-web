@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from "sonner";
 import type { Business, Desire, Edge } from "@/lib/businesses";
 
-const POS: Record<string, { x: number; y: number }> = { contact: { x: 140, y: 170 }, logistics: { x: 560, y: 80 }, crm: { x: 560, y: 280 } };
+const POS: Record<"contact" | "logistics" | "crm", { x: number; y: number }> = { contact: { x: 140, y: 170 }, logistics: { x: 560, y: 80 }, crm: { x: 560, y: 280 } };
 
 export function DevMode({ b }: { b: Business }) {
   const [edge, setEdge] = useState<Edge | null>(null);
@@ -27,7 +27,7 @@ export function DevMode({ b }: { b: Business }) {
         <div className="relative bg-grid">
           <svg viewBox="0 0 720 360" className="w-full">
             {b.edges.map((e) => {
-              const a = POS[e.from], c = POS[e.to];
+              const a = POS[e.from as keyof typeof POS], c = POS[e.to as keyof typeof POS];
               const mx = (a.x + c.x) / 2, my = (a.y + c.y) / 2;
               return (
                 <g key={e.id} className="cursor-pointer" onClick={() => setEdge(e)}>
@@ -48,7 +48,7 @@ export function DevMode({ b }: { b: Business }) {
               );
             })}
             {b.nodes.map((n) => {
-              const p = POS[n.id];
+              const p = POS[n.id as keyof typeof POS];
               return (
                 <foreignObject key={n.id} x={p.x - 85} y={p.y - 32} width={170} height={64}>
                   <div className="flex h-full flex-col justify-center rounded-lg border border-primary/50 bg-card px-3 shadow-glow">
