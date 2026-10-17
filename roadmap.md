@@ -6,3 +6,4 @@
 - [ ] Verify against the live API: blocked because api.archable.run does not resolve from this environment.
 - [x] Add and verify the browser-only owner sign-in page and its 360 px layout without changing existing helpers.
 - [ ] Verify live owner sign-in: requires a valid one-time Telegram link; lifecycle and navigation verified with test responses only.
+- [ ] Connect and verify live tenant shell boot, ready-only business identity and colour, demo fallback, and staged-update notice without changing maintained helpers.
