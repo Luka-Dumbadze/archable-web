@@ -8,3 +8,5 @@
 - [ ] Verify live owner sign-in: requires a valid one-time Telegram link; lifecycle and navigation verified with test responses only.
 - [x] Connect tenant shell boot, ready-only business identity and colour, demo fallback, and staged-update notice without changing maintained helpers; 25 tests and controlled browser checks pass, including 360 px and draft preservation until navigation.
 - [ ] Verify shell data and live update delivery against the external service: blocked because api.archable.run is unreachable from this environment; browser checks used controlled service responses.
+- [ ] Replace Developer Mode graph with the maintained live hooks, add connection inspector and keyboard/search controls, and verify desktop/360 px behavior without editing src/dev or src/shell.
+- [ ] Allow the Owner Mode business title to wrap on narrow screens.
