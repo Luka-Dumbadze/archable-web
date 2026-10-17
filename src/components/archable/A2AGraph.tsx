@@ -20,11 +20,12 @@ const SelectEdge = createContext<(id: string) => void>(() => {});
 function ConnectionEdge(props: EdgeProps) {
   const select = useContext(SelectEdge);
   const lane = typeof props.data?.["lane"] === "number" ? props.data["lane"] : 0;
+  const labelDx = typeof props.data?.["labelDx"] === "number" ? props.data["labelDx"] : 0;
   const labelDy = typeof props.data?.["labelDy"] === "number" ? props.data["labelDy"] : 0;
-  const [defaultPath, defaultX, defaultY] = getSmoothStepPath(props);
+  const [defaultPath] = getSmoothStepPath(props);
   const path = lane ? `M ${props.sourceX} ${props.sourceY} C ${props.sourceX} ${props.sourceY + lane}, ${props.targetX} ${props.targetY + lane}, ${props.targetX} ${props.targetY}` : defaultPath;
-  const x = lane ? (props.sourceX + props.targetX) / 2 : defaultX;
-  const y = (lane ? (props.sourceY + props.targetY) / 2 + lane : defaultY) + labelDy;
+  const x = (props.sourceX + props.targetX) / 2 + labelDx;
+  const y = (props.sourceY + props.targetY) / 2 + lane + labelDy;
   return <><BaseEdge id={props.id} path={path} style={props.style ?? {}} interactionWidth={props.interactionWidth ?? 24} {...(props.markerEnd ? { markerEnd: props.markerEnd } : {})} />
     <EdgeLabelRenderer><div className="nodrag nopan graph-edge-label" style={{ transform: `translate(-50%, -50%) translate(${x}px,${y}px)` }}>
       <Button variant="outline" size="sm" className="h-auto max-w-[220px] whitespace-normal bg-background px-2 py-1 font-mono text-[11px] leading-relaxed" onClick={() => select(props.id)}>{props.label}</Button>
