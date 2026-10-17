@@ -11,3 +11,5 @@
 - [x] Replace Developer Mode graph with the maintained hooks and add connection inspector, search, zoom, and keyboard controls without editing src/dev or src/shell; 40 tests pass and desktop/360 px browser checks show no runtime errors.
 - [x] Allow the Owner Mode business title to wrap on narrow screens; verified a two-line title at 360 px without horizontal overflow.
 - [ ] Verify Developer Mode against authenticated live tenant data and broadcasts: requires owner sign-in and a reachable external service; fixture flows and pulse rules are verified.
+- [x] Keep every edge label visible in Developer Mode: small ±40 px offsets for parallel edges, labels at edge midpoints with deterministic de-overlap, and a wider fit view; verified by browser click and geometry checks.
+- [x] Show contract schemas as field rows (name, type or enum, required mark, collapsible nesting), "No output" for null outputs, and the operation id in small monospace; 20 tests pass and the build is clean.
