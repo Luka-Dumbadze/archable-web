@@ -11,3 +11,4 @@
 - Selected business lives in the URL as `?biz=<id>` on `/`, `/dev`, `/chat`; why: reloads and links keep state without storage.
 - Backend is the user's own external Supabase via `src/lib/supabase.ts` (publishable key only); why: Lovable Cloud must not be enabled and service-role keys are banned.
 - Chat API lifecycle belongs in a browser-effect hook; tenant hosts use the externally maintained session/contracts modules without editing them, while other hosts retain demo chat, to avoid SSR session work.
+- Owner sign-in at `/signin` delegates to the externally maintained web-link helper from a mount-only browser effect, with one shared attempt across effect replay; why: one-time links must not be exchanged during SSR or twice on mount.
