@@ -29,8 +29,8 @@ function ready() {
     edges: [{ id: "edge-one", source: "app:contact_center", target: "app:quickshipper", label: "Connection", type: "smoothstep", data: { edge: MARANI_A2A.edges[0]!, dash: "6 4", width: 1.5, points: ROUTE, label: LABEL }, style: { strokeDasharray: "6 4", strokeWidth: 1.5 } }],
   } };
 }
-function edgeProps(data: Record<string, unknown>) {
-  return { id: "edge-one", label: "Connection", data, sourceX: 0, sourceY: 0, targetX: 100, targetY: 80 } as never;
+function edgeProps(data: Record<string, unknown>): React.ComponentProps<typeof ConnectionEdge> {
+  return { id: "edge-one", label: "Connection", data, sourceX: 0, sourceY: 0, targetX: 100, targetY: 80 } as unknown as React.ComponentProps<typeof ConnectionEdge>;
 }
 describe("Developer map controls", () => {
   it("preserves supplied positions and highlights title search matches", () => {
@@ -57,7 +57,7 @@ describe("Developer map controls", () => {
   });
   it("draws a rounded polyline through the layout route", () => {
     render(<ConnectionEdge {...edgeProps({ edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: ROUTE, label: LABEL })} />);
-    const path = String(mock.edge?.path);
+    const path = String(mock.edge?.["path"]);
     expect(path.startsWith("M 0 0")).toBe(true);
     expect(path.endsWith("L 100 80")).toBe(true);
     expect(path).toContain("Q");
@@ -70,7 +70,7 @@ describe("Developer map controls", () => {
   });
   it("falls back to a smooth step when the route has fewer than 2 points", () => {
     render(<ConnectionEdge {...edgeProps({ edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: [], label: null })} />);
-    expect(mock.edge?.path).toBe("M 0 0 L 10 10");
+    expect(mock.edge?.["path"]).toBe("M 0 0 L 10 10");
   });
   it("bounds the default view to nodes and label boxes", () => {
     const node = MARANI_A2A.nodes[0]!;
