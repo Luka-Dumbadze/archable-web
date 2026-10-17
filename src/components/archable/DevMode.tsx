@@ -80,7 +80,7 @@ export function DevMode({ b }: { b: Business }) {
           {b.desires.map((d) => (
             <div key={d.id} className="rounded-lg border p-4">
               <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
-                <span className="text-foreground">{d.id}</span>· {d.status} · T{d.tier}
+                <span className="text-foreground">{d.id}</span>· {d.status} · {d.tier}
               </div>
               <div className="mt-2 text-sm font-medium">{d.title}</div>
               <div className="mt-3 flex flex-wrap items-center gap-1 font-mono text-[11px] text-muted-foreground">

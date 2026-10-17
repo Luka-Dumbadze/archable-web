@@ -29,7 +29,7 @@ function Chat() {
   const [msgs, setMsgs] = useState<Msg[]>([{ from: "bot", text: `Hi! Welcome to ${b.name}. How can I help?` }]);
   const [draft, setDraft] = useState("");
   const end = useRef<HTMLDivElement>(null);
-  useEffect(() => end.current?.scrollIntoView({ behavior: "smooth" }), [msgs]);
+  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
   const send = () => {
     const text = draft.trim();

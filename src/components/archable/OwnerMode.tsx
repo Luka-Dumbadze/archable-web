@@ -7,9 +7,9 @@ import type { Business, Order } from "@/lib/businesses";
 
 function Panel({ title, icon: I, children, className = "" }: { title: string; icon: React.ElementType; children: React.ReactNode; className?: string }) {
   return (
-    <section className={`flex flex-col rounded-xl border bg-card ${className}`}>
+    <section className={`flex min-w-0 flex-col rounded-xl border bg-card ${className}`}>
       <div className="flex items-center gap-2 px-6 pt-5 pb-3 text-sm font-medium"><I className="size-4 text-muted-foreground" />{title}</div>
-      <div className="flex-1 overflow-auto">{children}</div>
+      <div className="min-w-0 flex-1 overflow-auto">{children}</div>
     </section>
   );
 }
@@ -25,9 +25,9 @@ export function OwnerMode({ b }: { b: Business }) {
   const [req, setReq] = useState("");
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="text-[22px] font-semibold">{b.emoji} {b.name}</h2>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:flex-wrap sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="truncate text-[22px] font-semibold">{b.emoji} {b.name}</h2>
         </div>
         <Button onClick={() => setOpen(true)}><Plus /> Request change</Button>
       </div>
@@ -61,44 +61,44 @@ function Retail({ b }: { b: Business }) {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
       <Panel title="Inbox" icon={MessageSquare} className="h-[460px] lg:col-span-2">
-        <div className="grid h-full grid-cols-5">
-          <div className="col-span-2 border-r">
+        <div className="grid h-full min-w-0 grid-cols-5">
+          <div className="col-span-2 min-w-0 border-r">
             {chats.map((c) => (
               <button key={c.id} onClick={() => { setActive(c.id); setChats((cs) => cs.map((x) => x.id === c.id ? { ...x, unread: 0 } : x)); }}
                 className={`block w-full border-b px-3 py-2.5 text-left text-sm ${c.id === active ? "bg-accent" : "hover:bg-secondary"}`}>
-                <div className="flex justify-between"><span className="truncate font-medium">{c.customer}</span>{c.unread > 0 && <span className="rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground">{c.unread}</span>}</div>
-                <div className="font-mono text-[10px] text-muted-foreground">{c.channel} · {c.time}</div>
+                <div className="flex justify-between gap-1"><span className="min-w-0 truncate font-medium">{c.customer}</span>{c.unread > 0 && <span className="shrink-0 rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground">{c.unread}</span>}</div>
+                <div className="truncate font-mono text-[10px] text-muted-foreground">{c.channel} · {c.time}</div>
               </button>
             ))}
           </div>
-          <div className="col-span-3 flex flex-col">
+          <div className="col-span-3 flex min-w-0 flex-col">
             <div className="flex-1 space-y-2 overflow-auto p-3">
               {chat.messages.map((m, i) => (
                 <div key={i} className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.from === "agent" ? "ml-auto bg-secondary text-foreground" : "bg-background border"}`}>{m.text}</div>
               ))}
             </div>
             <div className="flex gap-2 border-t p-2">
-              <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Reply…" className="flex-1 rounded-md border bg-input/30 px-2 text-sm outline-none" />
+              <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Reply…" className="min-w-0 flex-1 rounded-md border bg-input/30 px-2 text-sm outline-none" />
               <Button size="icon" onClick={send}><Send /></Button>
             </div>
           </div>
         </div>
       </Panel>
       <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-3">
-        <div className="grid h-full grid-cols-3 gap-3 p-3">
+        <div className="grid h-full min-w-0 grid-cols-3 gap-3 p-3">
           {cols.map((col) => (
-            <div key={col} className="rounded-lg bg-secondary/50 p-2">
-              <div className="mb-2 flex justify-between px-1 font-mono text-xs text-muted-foreground"><span>{col}</span><span>{orders.filter((o) => o.status === col).length}</span></div>
+            <div key={col} className="min-w-0 rounded-lg bg-secondary/50 p-2">
+              <div className="mb-2 flex justify-between gap-1 px-1 font-mono text-xs text-muted-foreground"><span className="truncate">{col}</span><span className="shrink-0">{orders.filter((o) => o.status === col).length}</span></div>
               <div className="space-y-2">
                 {orders.filter((o) => o.status === col).map((o) => (
-                  <div key={o.id} className="animate-fadeup rounded-md border bg-card p-2.5 text-sm">
-                    <div className="flex justify-between font-mono text-xs"><span className="text-primary">{o.id}</span><span>{o.total} ₾</span></div>
-                    <div className="mt-1 font-medium">{o.customer}</div>
-                                        <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>{o.courier ?? "—"} · {o.eta}</span>
-                      {col !== "Delivered" && <button onClick={() => advance(o.id)} className="text-primary hover:underline">→</button>}
+                  <div key={o.id} className="animate-fadeup min-w-0 rounded-md border bg-card p-2.5 text-sm">
+                    <div className="flex justify-between gap-1 font-mono text-xs"><span className="min-w-0 truncate text-primary">{o.id}</span><span className="shrink-0">{o.total} ₾</span></div>
+                    <div className="mt-1 min-w-0 truncate font-medium">{o.customer}</div>
+                                        <div className="mt-2 flex items-center justify-between gap-1 text-[11px] text-muted-foreground">
+                      <span className="min-w-0 truncate">{o.courier ?? "—"} · {o.eta}</span>
+                      {col !== "Delivered" && <button onClick={() => advance(o.id)} className="shrink-0 text-primary hover:underline">→</button>}
                     </div>
                   </div>
                 ))}
@@ -125,29 +125,29 @@ function Clinic({ b }: { b: Business }) {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const hours = Array.from({ length: 9 }, (_, i) => 9 + i);
   return (
-    <div className="grid gap-6 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
       <Panel title="Patients" icon={Users} className="lg:col-span-2">
         {b.patients!.map((p) => (
-          <div key={p.id} className="flex items-center justify-between border-b px-4 py-3 last:border-0 hover:bg-secondary/50">
-            <div>
-              <div className="text-sm font-medium">{p.name} <span className="text-muted-foreground">· {p.age}</span></div>
-              <div className="font-mono text-[11px] text-muted-foreground">{p.id}</div>
+          <div key={p.id} className="flex items-center justify-between gap-2 border-b px-4 py-3 last:border-0 hover:bg-secondary/50">
+            <div className="min-w-0">
+              <div className="truncate text-sm font-medium">{p.name} <span className="text-muted-foreground">· {p.age}</span></div>
+              <div className="truncate font-mono text-[11px] text-muted-foreground">{p.id}</div>
             </div>
             <Pill s={p.status} />
           </div>
         ))}
       </Panel>
       <Panel title="This week" icon={CalendarDays} className="lg:col-span-3">
-        <div className="grid grid-cols-[48px_repeat(6,1fr)] text-xs">
+        <div className="grid min-w-0 grid-cols-[48px_repeat(6,minmax(0,1fr))] text-xs">
           <div />
-          {days.map((d) => <div key={d} className="border-b border-l py-2 text-center font-mono text-muted-foreground">{d}</div>)}
+          {days.map((d) => <div key={d} className="truncate border-b border-l py-2 text-center font-mono text-muted-foreground">{d}</div>)}
           {hours.map((h) => (
             <div key={h} className="contents">
               <div className="h-10 pr-2 text-right font-mono text-muted-foreground">{h}:00</div>
               {days.map((_, d) => {
                 const a = b.appointments!.find((x) => x.day === d && x.hour === h);
                 return (
-                  <div key={d} className="relative h-10 border-b border-l">
+                  <div key={d} className="relative h-10 min-w-0 border-b border-l">
                     {a && (
                       <button onClick={() => toast(`${a.patient} — ${a.type}`, { description: `Dr. ${a.doctor} · ${days[d]} ${h}:00` })}
                         className={`absolute inset-x-1 top-1 z-10 rounded border-l-2 px-1.5 py-1 text-left ${a.doctor === "Beridze" ? "border-primary bg-accent" : "border-success bg-success/15"}`}
