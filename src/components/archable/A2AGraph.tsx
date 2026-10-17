@@ -74,7 +74,7 @@ export default function A2AGraph() {
       const ids = [...lp.keys()];
       for (let a = 0; a < ids.length; a++) {
         for (let b = a + 1; b < ids.length; b++) {
-          const A = lp.get(ids[a])!, B = lp.get(ids[b])!;
+          const A = lp.get(ids[a]!)!, B = lp.get(ids[b]!)!;
           const ox = (A.w + B.w) / 2 + 8 - Math.abs(A.x - B.x);
           const oy = (A.h + B.h) / 2 + 8 - Math.abs(A.y - B.y);
           if (ox <= 0 || oy <= 0) continue;
