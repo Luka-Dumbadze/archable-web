@@ -16,9 +16,11 @@ import A2AGraph from "./A2AGraph";
 
 afterEach(() => { cleanup(); mock.pulses = {}; mock.reload.mockClear(); });
 function ready() {
+  const node = MARANI_A2A.nodes[0];
+  if (!node) throw new Error("Fixture node missing");
   mock.load = { state: "ready", demo: true, data: {
     graph: MARANI_A2A,
-    nodes: [{ id: "app:contact_center", type: "a2a", position: { x: 127, y: 391 }, data: { node: MARANI_A2A.nodes[0], title: "Contact Center", subtitle: "5 tools", external: false } }],
+    nodes: [{ id: "app:contact_center", type: "a2a", position: { x: 127, y: 391 }, data: { node, title: "Contact Center", subtitle: "5 tools", external: false } }],
     edges: [{ id: "edge-one", source: "app:contact_center", target: "app:quickshipper", label: "Connection", style: { strokeDasharray: "6 4", strokeWidth: 1.5 } }],
   } };
 }
