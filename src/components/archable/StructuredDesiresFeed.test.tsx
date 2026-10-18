@@ -1,7 +1,14 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { RationaleCard } from "@/contracts";
 import { demoDesires, resetDemoDesires } from "@/dev/demo-desires";
 import { StructuredDesiresFeed } from "./StructuredDesiresFeed";
+
+function openRationale() {
+  const tab = screen.getAllByRole("tab", { name: "Rationale" })[0];
+  if (!tab) throw new Error("Missing rationale tab");
+  fireEvent.click(tab);
+}
 
 afterEach(cleanup);
 
