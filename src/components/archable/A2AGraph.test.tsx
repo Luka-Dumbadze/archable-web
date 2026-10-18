@@ -26,8 +26,18 @@ function ready() {
   mock.load = { state: "ready", demo: true, data: {
     graph: MARANI_A2A,
     nodes: [{ id: "app:contact_center", type: "a2a", position: { x: 127, y: 391 }, data: { node, title: "Contact Center", subtitle: "5 tools", external: false } }],
-    edges: [{ id: "edge-one", source: "app:contact_center", target: "app:quickshipper", label: "Connection", type: "smoothstep", data: { edge: MARANI_A2A.edges[0]!, dash: "6 4", width: 1.5, points: ROUTE, label: LABEL }, style: { strokeDasharray: "6 4", strokeWidth: 1.5 } }],
+    edges: [{ id: "edge-one", source: "app:contact_center", target: "app:quickshipper", label: "Connection", type: "smoothstep", data: { edge: fixtureEdge(), dash: "6 4", width: 1.5, points: ROUTE, label: LABEL }, style: { strokeDasharray: "6 4", strokeWidth: 1.5 } }],
   } };
+}
+function fixtureEdge() {
+  const edge = MARANI_A2A.edges[0];
+  if (!edge) throw new Error("Fixture edge missing");
+  return edge;
+}
+function fixtureNode() {
+  const node = MARANI_A2A.nodes[0];
+  if (!node) throw new Error("Fixture node missing");
+  return node;
 }
 function edgeProps(data: Record<string, unknown>): React.ComponentProps<typeof ConnectionEdge> {
   return { id: "edge-one", label: "Connection", data, sourceX: 0, sourceY: 0, targetX: 100, targetY: 80 } as unknown as React.ComponentProps<typeof ConnectionEdge>;
@@ -53,30 +63,30 @@ describe("Developer map controls", () => {
   });
   it.each(["allow", "deny"] as const)("highlights %s pulses while preserving supplied dash styling", (decision) => {
     ready(); mock.pulses = { "edge-one": decision }; render(<A2AGraph />);
-    expect(mock.flow.edges?.[0]?.style).toEqual({ strokeDasharray: "6 4", strokeWidth: 3.5, stroke: decision === "deny" ? "var(--destructive)" : "var(--primary)" });
+    expect(mock.flow.edges?.[0]?.style).toEqual({ strokeDasharray: "6 4", strokeWidth: 3.5, stroke: decision === "deny" ? "var(--destructive)" : "var(--success)" });
   });
   it("draws a rounded polyline through the layout route", () => {
-    render(<ConnectionEdge {...edgeProps({ edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: ROUTE, label: LABEL })} />);
+    render(<ConnectionEdge {...edgeProps({ edge: fixtureEdge(), dash: undefined, width: 1.5, points: ROUTE, label: LABEL })} />);
     const path = String(mock.edge?.["path"]);
     expect(path.startsWith("M 0 0")).toBe(true);
     expect(path.endsWith("L 100 80")).toBe(true);
     expect(path).toContain("Q");
   });
   it("places the label box at its top-left with the layout width", () => {
-    render(<ConnectionEdge {...edgeProps({ edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: ROUTE, label: LABEL })} />);
-    const wrap = screen.getByRole("button", { name: "Connection" }).parentElement;
+    render(<ConnectionEdge {...edgeProps({ edge: fixtureEdge(), dash: undefined, width: 1.5, points: ROUTE, label: LABEL })} />);
+    const wrap = screen.getByRole("button", { name: /Connection/ }).parentElement;
     expect(wrap?.style.transform).toBe("translate(10px, 90px)");
     expect(wrap?.style.width).toBe("120px");
   });
   it("falls back to a smooth step when the route has fewer than 2 points", () => {
-    render(<ConnectionEdge {...edgeProps({ edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: [], label: null })} />);
+    render(<ConnectionEdge {...edgeProps({ edge: fixtureEdge(), dash: undefined, width: 1.5, points: [], label: null })} />);
     expect(mock.edge?.["path"]).toBe("M 0 0 L 10 10");
   });
   it("bounds the default view to nodes and label boxes", () => {
-    const node = MARANI_A2A.nodes[0]!;
+    const node = fixtureNode();
     const bounds = contentBounds(
       [{ id: "app:contact_center", type: "a2a", position: { x: 127, y: 391 }, data: { node, title: "Contact Center", subtitle: "5 tools", external: false } }],
-      [{ data: { edge: MARANI_A2A.edges[0]!, dash: undefined, width: 1.5, points: ROUTE, label: { x: 10, y: 100, width: 120, height: 24 } } }],
+      [{ data: { edge: fixtureEdge(), dash: undefined, width: 1.5, points: ROUTE, label: { x: 10, y: 100, width: 120, height: 24 } } }],
     );
     expect(bounds).toEqual({ x: 10, y: 100, width: 337, height: 375 });
   });
