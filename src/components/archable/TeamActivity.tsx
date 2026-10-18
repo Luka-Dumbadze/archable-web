@@ -34,5 +34,4 @@ export function TeamActivity() {
       </div>
     </div>
   </section>;
-  </section>;
 }
