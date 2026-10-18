@@ -7,6 +7,7 @@ import type { Business, Order } from "@/lib/businesses";
 import { TryAsCustomer } from "./TryAsCustomer";
 import { useShell } from "@/shell/use-shell";
 import { WaitingForYou } from "./WaitingForYou";
+import { OwnerChat } from "@/owner/OwnerChat";
 
 function Panel({ title, icon: I, children, className = "" }: { title: string; icon: React.ElementType; children: React.ReactNode; className?: string }) {
   return (
@@ -37,6 +38,7 @@ export function OwnerMode({ b }: { b: Business }) {
         <Button onClick={() => setOpen(true)}><Plus /> Request change</Button>
       </div>
       <WaitingForYou businessId={b.id} />
+      <OwnerChat key={b.id} business={b} />
       {b.kind === "retail" ? <Retail b={b} /> : <Clinic b={b} />}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
