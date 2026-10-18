@@ -1,4 +1,5 @@
-- [ ] Add the owner Architect chat with unchanged helpers, action controls, and owner rationale sheet; verify demo conversation and 360 px layout.
+- [x] Add the owner Architect chat with unchanged helpers, action controls, and owner rationale sheet; 28 tests pass and the demo send → draft → reasons → close flow works on desktop and 360 px with no overflow or runtime errors.
+- [ ] Verify live Architect chat: requires owner sign-in on a tenant host and a reachable external service; demo conversation and supplied helper contract tests pass.
 - [x] Add shared rationale cards, Marani's waiting item, and developer D-14/source details; 28 tests pass and both modes verified at 360 px with no overflow or runtime errors.
 - [x] Add the Owner Mode customer console using unchanged helpers; verify sending, reset, and desktop/360 px layout with test responses (17 tests pass).
 - [ ] Verify live customer-console replies: requires owner sign-in and a reachable external service; successful browser checks used test-only sign-in and replies.
