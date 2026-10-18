@@ -3,6 +3,7 @@ import { fallback } from "@tanstack/zod-adapter";
 
 export const bizSearch = z.object({
   biz: fallback(z.string(), "").default(""),
+  view: z.enum(["apps", "owner", "contact", "crm", "storage", "team", "analytics", "operations"]).optional(),
 });
 
 export const chatSearch = z.object({

@@ -21,6 +21,7 @@ export const Route = createFileRoute("/dev")({
 
 function Dev() {
   const { biz } = Route.useSearch();
-  const b = getBusiness(biz) ?? BUSINESSES[0]!;
+  const b = getBusiness(biz) ?? BUSINESSES[0];
+  if (!b) return null;
   return <Workspace business={b} mode="dev" />;
 }
