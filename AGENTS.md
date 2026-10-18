@@ -18,3 +18,4 @@
 - Developer graph and inspector presentation live in components/archable and consume unchanged src/dev hooks; the map is dynamically loaded behind ClientOnly to keep graph libraries out of SSR, and supplied ELK positions are never recomputed by presentation code.
 - Shared rationale presentation consumes maintained helpers and fixtures; owner and developer entry points share it so sentences stay identical while sources remain developer-only.
 - Owner Architect chat presentation lives in src/owner/OwnerChat.tsx, delegates conversation and button handling to the unchanged useOwnerChat hook, and reuses the unchanged shared owner rationale card; key it by business ID so switching businesses cannot retain another conversation.
+- Developer structured desires use the unchanged useDesires hook in DevMode and a presentation-only StructuredDesiresFeed; impact, price, unlink/reset and rationale stay delegated to maintained helpers so refreshed data remains authoritative.

@@ -1,3 +1,5 @@
+- [x] Add structured desires above existing developer demo desires without duplicate D-14; 20 tests pass and desktop/360 px checks verify unlink persistence, updated rationale and sources, empty chats, and reset without horizontal overflow or runtime errors.
+- [ ] Verify live structured desires and unlinking: requires an authenticated tenant and the external service's proposed desire endpoints; demo and maintained contract tests are verified.
 - [x] Add the owner Architect chat with unchanged helpers, action controls, and owner rationale sheet; 28 tests pass and the demo send → draft → reasons → close flow works on desktop and 360 px with no overflow or runtime errors.
 - [ ] Verify live Architect chat: requires owner sign-in on a tenant host and a reachable external service; demo conversation and supplied helper contract tests pass.
 - [x] Add shared rationale cards, Marani's waiting item, and developer D-14/source details; 28 tests pass and both modes verified at 360 px with no overflow or runtime errors.
