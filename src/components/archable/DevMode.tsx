@@ -10,6 +10,7 @@ import { DEMO_CHANGES, demoRationale } from "@/shared/fixtures/d14";
 import { useDesires } from "@/dev/use-desires";
 import { StructuredDesiresFeed } from "./StructuredDesiresFeed";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { TeamActivity } from "./TeamActivity";
 
 const A2AGraph = lazy(() => import("./A2AGraph"));
 
@@ -27,11 +28,13 @@ export function DevMode({ b }: { b: Business }) {
   const rationale = why ? demoRationale(b.id, why.id) : null;
 
   return (
-    <Tabs defaultValue="architecture" className="min-w-0">
+    <Tabs defaultValue="activity" className="min-w-0">
       <TabsList aria-label="Developer views" className="mb-6 flex h-auto w-full justify-start gap-2 rounded-none border-b bg-transparent p-0">
-        <TabsTrigger value="architecture" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">App Architecture</TabsTrigger>
-        <TabsTrigger value="desires" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">Evolution &amp; Desires</TabsTrigger>
+        <TabsTrigger value="activity" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">Live Agent Activity</TabsTrigger>
+        <TabsTrigger value="architecture" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">System Map</TabsTrigger>
+        <TabsTrigger value="desires" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">Evolution &amp; Changes</TabsTrigger>
       </TabsList>
+      <TabsContent value="activity" className="mt-0"><TeamActivity /></TabsContent>
       <TabsContent value="architecture" className="mt-0">
       <section aria-label="App map" className="h-[600px] min-w-0 sm:h-[680px]">
         <ClientOnly fallback={<div className="h-full bg-muted/30" />}>
