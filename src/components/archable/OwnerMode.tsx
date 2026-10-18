@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import type { Business, Order } from "@/lib/businesses";
 import { TryAsCustomer } from "./TryAsCustomer";
 import { useShell } from "@/shell/use-shell";
+import { WaitingForYou } from "./WaitingForYou";
 
 function Panel({ title, icon: I, children, className = "" }: { title: string; icon: React.ElementType; children: React.ReactNode; className?: string }) {
   return (
@@ -35,6 +36,7 @@ export function OwnerMode({ b }: { b: Business }) {
         </div>
         <Button onClick={() => setOpen(true)}><Plus /> Request change</Button>
       </div>
+      <WaitingForYou businessId={b.id} />
       {b.kind === "retail" ? <Retail b={b} /> : <Clinic b={b} />}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
