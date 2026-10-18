@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { OwnerSignIn } from "./OwnerSignIn";
+import { OwnerSignIn, ownerHomeSearch } from "./OwnerSignIn";
 
 const { complete, navigate, client } = vi.hoisted(() => ({
   complete: vi.fn(), navigate: vi.fn(), client: {},

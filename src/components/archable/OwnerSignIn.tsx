@@ -45,7 +45,7 @@ export function OwnerSignIn() {
         </h1>
         <p role="status" aria-live="polite" className="text-sm leading-relaxed [overflow-wrap:anywhere]">{messages[status]}</p>
         {status === "ok" && (
-          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/", search: { biz: tenantFromHost(window.location.hostname)?.slug ?? "" } })}>
+          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/", search: ownerHomeSearch(window.location.hostname) })}>
             Open Owner Mode
           </Button>
         )}
