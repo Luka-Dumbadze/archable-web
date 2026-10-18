@@ -15,7 +15,7 @@ function shortDate(value: string) {
 export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDemo }: FeedProps) {
   if (load.state === "loading") return (
     <div role="status" aria-label="Loading desires" className="space-y-4">
-      {[0, 1].map((key) => <div key={key} className="space-y-3 rounded-lg border p-4">
+      {[0, 1].map((key) => <div key={key} className="space-y-3 rounded-xl border bg-card p-5">
         <Skeleton className="h-4 w-1/3" /><Skeleton className="h-10 w-full" /><Skeleton className="h-20 w-full" />
       </div>)}
     </div>
@@ -32,14 +32,14 @@ export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDem
         {error === "forbidden" ? "Only the owner or a developer can unlink chats." : "Couldn't unlink right now. Please try again."}
       </p>}
       {load.desires.map((desire) => (
-        <article key={desire.id} aria-label={`Desire D-${desire.number}`} className="min-w-0 rounded-lg border p-4">
+        <article key={desire.id} aria-label={`Desire D-${desire.number}`} className="min-w-0 rounded-xl border bg-card p-5">
           <header className="space-y-2">
             <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground">
               <span className="text-foreground">D-{desire.number}</span><span aria-hidden="true">·</span>
               <span className="[overflow-wrap:anywhere]">{desire.status}</span><span aria-hidden="true">·</span><span>T{desire.tier}</span>
             </div>
             <h3 className="text-sm font-medium [overflow-wrap:anywhere]">{desire.statement}</h3>
-            <p className="inline-block max-w-full rounded border bg-secondary/50 px-2 py-1 font-mono text-[11px] text-muted-foreground [overflow-wrap:anywhere]">{impactChip(desire.impact)}</p>
+            <p className="inline-block max-w-full rounded-full border bg-secondary/50 px-2 py-1 font-mono text-[11px] text-muted-foreground [overflow-wrap:anywhere]">{impactChip(desire.impact)}</p>
           </header>
           <Tabs defaultValue="chats" className="mt-4 min-w-0">
             <TabsList aria-label={`D-${desire.number} details`} className="max-w-full">

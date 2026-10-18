@@ -22,7 +22,7 @@ function AppNode({ data, selected }: NodeProps<Node<A2ANodeData>>) {
     <Handle type="target" position={Position.Left} />
     <div className="flex min-w-0 items-center justify-between gap-1"><span className="min-w-0 break-words text-[11px] font-semibold leading-tight">{data.title}</span><span className={`telemetry-health ${telemetry.connected || telemetry.demo ? "is-active" : ""}`}><span className="radar-dot"><span /></span>{telemetry.demo ? "SAMPLE" : telemetry.connected ? received.length ? "ACTIVE" : "CONNECTED" : "OFFLINE"}</span></div>
     <div className="mt-1 font-mono text-[8px] text-muted-foreground">{data.external ? "MCP External" : "In-Process Engine"}</div>
-    <div className="mt-1 flex flex-wrap items-center justify-between gap-1 font-mono text-[9px]"><span>p50: {latency === null ? "—" : `${latency}ms`}{telemetry.demo && latency !== null ? " · sample" : ""}</span><span className="rounded border px-1 text-muted-foreground">{data.node.tools.length} Tools Mounted</span></div>
+    <div className="mt-1 flex flex-wrap items-center justify-between gap-1 font-mono text-[9px]"><span>p50: {latency === null ? "—" : `${latency}ms`}{telemetry.demo && latency !== null ? " · sample" : ""}</span><span className="rounded-full border px-1 text-muted-foreground">{data.node.tools.length} Tools Mounted</span></div>
     <Handle type="source" position={Position.Right} />
   </div>;
 }
@@ -135,7 +135,7 @@ export default function A2AGraph() {
     <SelectEdge.Provider value={setSelected}><ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onInit={setInstance} minZoom={0.15} maxZoom={2} nodesDraggable={false} nodesConnectable={false} onEdgeClick={(_, e) => setSelected(e.id)} onPaneClick={() => setSelected(null)}>
       <Background gap={24} color="var(--telemetry-grid)" /><Controls showInteractive={false} />
     </ReactFlow></SelectEdge.Provider>
-    {query.trim() && <div role="status" className="absolute left-3 top-3 rounded border bg-background px-2 py-1 text-xs text-muted-foreground">{nodes.filter((n) => n.selected).length} matches</div>}
+    {query.trim() && <div role="status" className="absolute left-3 top-3 rounded-full border bg-card px-2 py-1 text-xs text-muted-foreground">{nodes.filter((n) => n.selected).length} matches</div>}
     <details className="absolute bottom-3 right-3 w-[calc(100%-70px)] rounded-md border bg-background text-xs md:hidden">
       <summary className="cursor-pointer px-3 py-2">Connections</summary>
       <div className="max-h-64 overflow-y-auto border-t p-1">{g.data.edges.map((e) => <Button key={e.id} variant="ghost" className="h-auto w-full justify-start whitespace-normal px-2 py-2 text-left font-mono text-[11px]" onClick={() => setSelected(e.id)}>{e.label}</Button>)}</div>
