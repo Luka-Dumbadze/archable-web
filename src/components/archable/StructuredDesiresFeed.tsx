@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { impactChip, chatPrice } from "@/dev/desires";
 import type { useDesires } from "@/dev/use-desires";
+import type { RationaleCard as Card } from "@/contracts";
 import { RationaleCard } from "@/shared/RationaleCard";
 
 type FeedProps = Pick<ReturnType<typeof useDesires>, "load" | "unlink" | "unlinking" | "error" | "resetDemo">;
@@ -32,7 +33,9 @@ export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDem
       {error && <p role="alert" className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
         {error === "forbidden" ? "Only the owner or a developer can unlink chats." : "Couldn't unlink right now. Please try again."}
       </p>}
-      {load.desires.map((desire) => (
+      {load.desires.map((desire) => {
+        const card: Card | null = desire.rationale_card;
+        return (
         <article key={desire.id} aria-label={`Desire D-${desire.number}`} className="change-card surface-interactive min-w-0">
           <header className="space-y-5">
             <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground">
@@ -68,11 +71,14 @@ export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDem
               )}
             </TabsContent>
             <TabsContent value="rationale" className="min-w-0 pt-3">
-              <RationaleCard card={desire.rationale_card} mode="developer" />
+              {card ? <RationaleCard card={card} mode="developer" /> : (
+                <p role="status" className="text-sm text-muted-foreground">Rationale is being drafted...</p>
+              )}
             </TabsContent>
           </Tabs>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }
