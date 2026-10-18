@@ -8,10 +8,10 @@ export const Route = createFileRoute("/dev")({
   validateSearch: zodValidator(bizSearch),
   head: () => ({
     meta: [
-      { title: "Developer Mode — Archable" },
-      { name: "description", content: "Live A2A MCP agent graph, contracts and structured desires." },
-      { property: "og:title", content: "Developer Mode — Archable" },
-      { property: "og:description", content: "Live A2A MCP agent graph, contracts and structured desires." },
+      { title: "Developer Console — Archable" },
+      { name: "description", content: "Agent activity, system topology, contracts and business changes." },
+      { property: "og:title", content: "Developer Console — Archable" },
+      { property: "og:description", content: "Agent activity, system topology, contracts and business changes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

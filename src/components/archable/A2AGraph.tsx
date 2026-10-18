@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ReactFlow, Background, Controls, Handle, Position, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type NodeProps, type ReactFlowInstance } from "@xyflow/react";
 import { Search } from "lucide-react";
+import { useShell } from "@/shell/use-shell";
 import { useA2A, useEdgePulses } from "@/dev/use-a2a";
 import type { A2AEdgeData, A2ANodeData } from "@/dev/layout";
 import { NODE_W, NODE_H, type Point } from "@/dev/layout";
@@ -9,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import { EdgeInspector } from "./EdgeInspector";
 
 function AppNode({ data, selected }: NodeProps<Node<A2ANodeData>>) {
+  const { status, live } = useShell();
   return <div className={`flex h-full w-full flex-col justify-center rounded-lg border bg-popover px-4 ${data.external ? "border-dashed" : ""} ${selected ? "border-primary ring-2 ring-primary/30" : ""}`}>
     <Handle type="target" position={Position.Left} />
-    <div className="break-words text-sm font-medium">{data.title}</div>
+    <div className="flex items-start gap-2"><span title={status === "ready" && live ? "Connected" : "Sample topology"} className={`mt-1 size-1.5 shrink-0 rounded-full ${status === "ready" && live ? "bg-success" : "bg-muted-foreground"}`} /><span className="break-words text-sm font-medium">{data.title}</span></div>
     <div className="mt-1 break-words font-mono text-[11px] text-muted-foreground">{data.subtitle}</div>
     <Handle type="source" position={Position.Right} />
   </div>;
@@ -24,9 +26,10 @@ export function roundedPath(points: Point[], radius = 8): string {
   if (points.length < 2 || !first || !last) return "";
   let d = `M ${first.x} ${first.y}`;
   for (let i = 1; i < points.length - 1; i++) {
-    const p = points[i]!;
-    const prev = points[i - 1]!;
-    const next = points[i + 1]!;
+    const p = points[i];
+    const prev = points[i - 1];
+    const next = points[i + 1];
+    if (!p || !prev || !next) continue;
     const inLen = Math.hypot(p.x - prev.x, p.y - prev.y) || 1;
     const outLen = Math.hypot(next.x - p.x, next.y - p.y) || 1;
     const r = Math.min(radius, inLen / 2, outLen / 2);
