@@ -13,6 +13,7 @@ import { AppsDashboard } from "./AppsDashboard";
 import { WORKSPACE_APPS, type WorkspaceAppId } from "./workspace-apps";
 import { WorkspaceAppViews } from "./WorkspaceAppViews";
 import { TryAsCustomer } from "./TryAsCustomer";
+import { BusinessAppViews } from "./BusinessAppViews";
 
 function Hint({ label, children }: { label: string; children: ReactNode }) {
   return <Tooltip><TooltipTrigger asChild>{children}</TooltipTrigger><TooltipContent className="bg-popover text-popover-foreground">{label}</TooltipContent></Tooltip>;
@@ -41,7 +42,6 @@ export function Workspace({ business, mode, view = "apps" }: { business: Busines
           </DropdownMenu>
           {status === "ready" && <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><span className="size-1.5 rounded-full bg-primary" />Live</span>}
           <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-            <Hint label="Try as customer"><Button variant="outline" aria-label="Try as customer" onClick={() => setTesting(true)} className="size-10 rounded-xl p-0 sm:w-auto sm:px-3"><MessageSquare className="size-4" /><span className="hidden sm:inline">Try as customer</span></Button></Hint>
             <Hint label={light ? "Use dark theme" : "Use light theme"}><Button size="icon" variant="ghost" aria-label={light ? "Use dark theme" : "Use light theme"} onClick={() => setLight(!light)} className="size-10 rounded-xl text-muted-foreground">{light ? <Moon /> : <Sun />}</Button></Hint>
             <Hint label="Profile"><Button asChild size="icon" variant="ghost" className="size-9 rounded-full border bg-secondary text-muted-foreground"><Link to="/signin" aria-label="Profile"><UserRound /></Link></Button></Hint>
           </div>
@@ -49,8 +49,14 @@ export function Workspace({ business, mode, view = "apps" }: { business: Busines
         </div>
       </header>
       <main key={business.id + mode + view} className="mx-auto min-w-0 max-w-6xl px-5 pb-32 pt-9 md:px-10 md:pt-12 lg:px-16">
-        {!appsVisible && <div className="mb-7 flex flex-wrap items-center gap-3"><Button asChild variant="ghost" size="sm" className="rounded-xl text-muted-foreground"><Link to="/" search={{ biz: business.id }}><ArrowLeft />Apps</Link></Button><span className="text-lg font-semibold">{mode === "dev" ? "Developer" : app?.title ?? "Owner"}</span></div>}
-        {mode === "dev" ? <DevMode b={business} /> : appsVisible ? <AppsDashboard onOpen={openApp} /> : view === "owner" ? <OwnerMode b={business} /> : view === "contact" || view === "crm" || view === "operations" ? <OwnerMode b={business} view={view} /> : view === "team" || view === "storage" || view === "analytics" ? <WorkspaceAppViews view={view} businessId={business.id} /> : null}
+        {!appsVisible && <div className="mb-8 space-y-6">
+          <Button asChild variant="ghost" size="sm" className="-ml-3 rounded-xl text-muted-foreground"><Link to="/" search={{ biz: business.id }}><ArrowLeft />Apps</Link></Button>
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-7">
+            <div className="flex min-w-0 items-center gap-4">{app && mode === "owner" && <span className={`app-badge ${app.tone} flex size-12 shrink-0 items-center justify-center rounded-full`}><app.icon className="size-6" /></span>}<h1 className="min-w-0 break-words text-2xl font-semibold">{mode === "dev" ? "Developer Mode" : app?.title ?? "Owner"}</h1></div>
+            {app && mode === "owner" && <span className="flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-[11px] text-muted-foreground"><span className="size-1.5 rounded-full bg-success" />Agent: Active</span>}
+          </div>
+        </div>}
+        {mode === "dev" ? <DevMode b={business} /> : appsVisible ? <AppsDashboard onOpen={openApp} /> : view === "owner" ? <OwnerMode b={business} /> : view === "contact" || view === "crm" || view === "operations" ? <BusinessAppViews b={business} view={view} /> : view === "team" || view === "storage" || view === "analytics" ? <WorkspaceAppViews view={view} businessId={business.id} /> : null}
       </main>
       <nav aria-label="Quick launch" className="quick-dock fixed bottom-5 left-1/2 z-40 flex max-w-[calc(100%-16px)] -translate-x-1/2 items-center gap-0.5 rounded-2xl border bg-popover/95 p-1.5 backdrop-blur-xl sm:gap-2 sm:p-2.5">
         <Hint label="Apps"><Button size="icon" variant="ghost" asChild className={`dock-button shrink-0 rounded-xl ${appsVisible ? "bg-secondary" : "text-muted-foreground"}`}><Link to="/" search={{ biz: business.id }} aria-label="All apps"><LayoutGrid /></Link></Button></Hint>
