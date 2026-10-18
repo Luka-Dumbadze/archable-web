@@ -63,6 +63,8 @@
   --color-primary-glow: var(--primary-glow);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-card-hover: var(--card-hover);
+  --color-border-hover: var(--border-hover);
   --font-sans: "Noto Sans Georgian", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
@@ -71,7 +73,9 @@
   --radius: 0.5rem;
   --background: oklch(0.141 0.005 285.8);
   --foreground: oklch(0.97 0.003 286);
-  --card: oklch(0.21 0.006 285.9 / 50%);
+  --card: oklch(0.184 0.006 285.8);
+  --card-hover: oklch(0.211 0.01 285.8);
+  --border-hover: oklch(1 0 0 / 16%);
   --card-foreground: oklch(0.97 0.003 286);
   --popover: oklch(0.21 0.006 285.9);
   --popover-foreground: oklch(0.97 0.003 286);
@@ -88,7 +92,14 @@
   --destructive-foreground: oklch(0.99 0 0);
   --success: oklch(0.72 0.17 155);
   --warning: oklch(0.8 0.15 80);
-  --border: oklch(0.274 0.006 286 / 60%);
+  --border: oklch(1 0 0 / 8%);
+  --app-contact: oklch(0.623 0.188 259.8);
+  --app-crm: oklch(0.769 0.165 70.1);
+  --app-storage: oklch(0.704 0.191 22.2);
+  --app-team: oklch(0.718 0.202 349.8);
+  --app-analytics: oklch(0.765 0.177 163.2);
+  --app-operations: oklch(0.702 0.183 293.5);
+  --shadow-dock: 0 12px 40px oklch(0 0 0 / 35%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.39 0.12 7);
   --chart-1: oklch(0.39 0.12 7);
@@ -109,14 +120,14 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  --background: oklch(0.141 0.005 285.8);
   --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
+  --card: oklch(0.184 0.006 285.8);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.39 0.12 7);
+  --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
@@ -125,7 +136,7 @@
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -184,6 +195,16 @@
   --xy-controls-box-shadow: none;
 }
 .graph-edge-label { position: absolute; pointer-events: all; }
+.app-tile:hover { background: var(--card-hover); border-color: var(--border-hover); }
+.app-contact { --app-color: var(--app-contact); }
+.app-crm { --app-color: var(--app-crm); }
+.app-storage { --app-color: var(--app-storage); }
+.app-team { --app-color: var(--app-team); }
+.app-analytics { --app-color: var(--app-analytics); }
+.app-operations { --app-color: var(--app-operations); }
+.app-badge { color: var(--app-color); background: color-mix(in oklab, var(--app-color) 14%, transparent); }
+.quick-dock { box-shadow: var(--shadow-dock); }
+.workspace-os { letter-spacing: 0; }
 .a2a-map .react-flow__edge-path { transition: stroke 150ms, stroke-width 150ms; }
 @media (prefers-reduced-motion: reduce) {
   .a2a-map .react-flow__edge-path { transition: none; }

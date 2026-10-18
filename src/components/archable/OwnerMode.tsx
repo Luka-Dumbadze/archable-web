@@ -24,11 +24,12 @@ const tone: Record<string, string> = {
 };
 const Pill = ({ s }: { s: string }) => <span className={`rounded border px-1.5 py-0.5 font-mono text-[11px] ${tone[s] ?? ""}`}>{s}</span>;
 
-export function OwnerMode({ b }: { b: Business }) {
+export function OwnerMode({ b, view }: { b: Business; view?: "contact" | "crm" | "operations" }) {
   const [open, setOpen] = useState(false);
   const [req, setReq] = useState("");
   const { status, manifest } = useShell();
   const name = status === "ready" && manifest ? manifest.os_name : b.name;
+  if (view) return b.kind === "retail" ? <Retail key={b.id + view} b={b} view={view} /> : <Clinic b={b} view={view} />;
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3 sm:flex sm:flex-wrap sm:justify-between">
@@ -54,12 +55,12 @@ export function OwnerMode({ b }: { b: Business }) {
   );
 }
 
-function Retail({ b }: { b: Business }) {
-  const [active, setActive] = useState(b.chats![0]!.id);
-  const [chats, setChats] = useState(b.chats!);
+function Retail({ b, view }: { b: Business; view?: "contact" | "crm" | "operations" }) {
+  const [active, setActive] = useState(b.chats?.[0]?.id);
+  const [chats, setChats] = useState(b.chats ?? []);
   const [draft, setDraft] = useState("");
-  const [orders, setOrders] = useState<Order[]>(b.orders!);
-  const chat = chats.find((c) => c.id === active)!;
+  const [orders, setOrders] = useState<Order[]>(b.orders ?? []);
+  const chat = chats.find((c) => c.id === active);
   const cols: Order["status"][] = ["Orders", "In Transit", "Delivered"];
   const advance = (id: string) => setOrders((os) => os.map((o) => o.id !== id ? o : { ...o, status: o.status === "Orders" ? "In Transit" : "Delivered", courier: o.courier ?? "Auto-assigned" }));
   const send = () => {
@@ -70,6 +71,8 @@ function Retail({ b }: { b: Business }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {view === "crm" && <Panel title="Customers" icon={Users} className="lg:col-span-2">{chats.map((c) => <div key={c.id} className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-4 last:border-0"><div className="min-w-0"><p className="break-words text-sm font-medium">{c.customer}</p><p className="mt-1 break-words text-sm text-muted-foreground">{c.last}</p></div><span className="text-xs text-muted-foreground">{c.channel} · {c.time}</span></div>)}</Panel>}
+      {(!view || view === "contact") && <>
       <Panel title="Inbox" icon={MessageSquare} className="h-[460px]">
         <div className="grid h-full min-w-0 grid-cols-5">
           <div className="col-span-2 min-w-0 border-r">
@@ -83,7 +86,7 @@ function Retail({ b }: { b: Business }) {
           </div>
           <div className="col-span-3 flex min-w-0 flex-col">
             <div className="flex-1 space-y-2 overflow-auto p-3">
-              {chat.messages.map((m, i) => (
+              {chat?.messages.map((m, i) => (
                 <div key={i} className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.from === "agent" ? "ml-auto bg-secondary text-foreground" : "bg-background border"}`}>{m.text}</div>
               ))}
             </div>
@@ -94,6 +97,9 @@ function Retail({ b }: { b: Business }) {
           </div>
         </div>
       </Panel>
+      <TryAsCustomer className="order-last h-[460px] lg:order-none lg:col-start-2 lg:row-start-1" />
+      </>}
+      {(!view || view === "operations") && <>
       <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-2">
         <div className="grid h-full min-w-0 grid-cols-3 gap-3 p-3">
           {cols.map((col) => (
@@ -118,25 +124,26 @@ function Retail({ b }: { b: Business }) {
       <Panel title="Catalog" icon={Package} className="lg:col-span-2">
         <table className="w-full text-sm">
           <thead className="font-mono text-xs text-muted-foreground"><tr className="border-b">{["SKU", "Name", "", "₾", "Stock"].map((h) => <th key={h} className="px-4 py-2 text-left font-normal">{h}</th>)}</tr></thead>
-          <tbody>{b.catalog!.map((c) => (
+          <tbody>{b.catalog?.map((c) => (
             <tr key={c.sku} className="border-b last:border-0 hover:bg-secondary/50">
               <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{c.sku}</td><td className="px-4 py-2">{c.name}</td><td className="px-4 py-2 text-muted-foreground text-xs">{c.category}</td>
               <td className="px-4 py-2 font-mono">{c.price} ₾</td><td className={`px-4 py-2 font-mono ${c.stock < 5 ? "text-destructive" : ""}`}>{c.stock}</td>
             </tr>))}</tbody>
         </table>
       </Panel>
-      <TryAsCustomer className="h-[460px] lg:col-start-2 lg:row-start-1" />
+      </>}
     </div>
   );
 }
 
-function Clinic({ b }: { b: Business }) {
+function Clinic({ b, view }: { b: Business; view?: "contact" | "crm" | "operations" }) {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const hours = Array.from({ length: 9 }, (_, i) => 9 + i);
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+      {(!view || view === "crm" || view === "contact") &&
       <Panel title="Patients" icon={Users} className="lg:col-span-2">
-        {b.patients!.map((p) => (
+        {b.patients?.map((p) => (
           <div key={p.id} className="flex items-center justify-between gap-2 border-b px-4 py-3 last:border-0 hover:bg-secondary/50">
             <div className="min-w-0">
               <div className="truncate text-sm font-medium">{p.name} <span className="text-muted-foreground">· {p.age}</span></div>
@@ -145,7 +152,8 @@ function Clinic({ b }: { b: Business }) {
             <Pill s={p.status} />
           </div>
         ))}
-      </Panel>
+      </Panel>}
+      {(!view || view === "operations") && <>
       <Panel title="This week" icon={CalendarDays} className="lg:col-span-3">
         <div className="grid min-w-0 grid-cols-[48px_repeat(6,minmax(0,1fr))] text-xs">
           <div />
@@ -154,7 +162,7 @@ function Clinic({ b }: { b: Business }) {
             <div key={h} className="contents">
               <div className="h-10 pr-2 text-right font-mono text-muted-foreground">{h}:00</div>
               {days.map((_, d) => {
-                const a = b.appointments!.find((x) => x.day === d && x.hour === h);
+                const a = b.appointments?.find((x) => x.day === d && x.hour === h);
                 return (
                   <div key={d} className="relative h-10 min-w-0 border-b border-l">
                     {a && (
@@ -174,14 +182,15 @@ function Clinic({ b }: { b: Business }) {
       <Panel title="Treatments" icon={FileText} className="lg:col-span-5">
         <table className="w-full text-sm">
           <thead className="font-mono text-xs text-muted-foreground"><tr className="border-b">{["ID", "Patient", "Procedure", "Tooth", "Date", "Cost", "Status"].map((h) => <th key={h} className="px-4 py-2 text-left font-normal">{h}</th>)}</tr></thead>
-          <tbody>{b.treatments!.map((t) => (
+          <tbody>{b.treatments?.map((t) => (
             <tr key={t.id} className="border-b last:border-0 hover:bg-secondary/50">
               <td className="px-4 py-2 font-mono text-xs text-muted-foreground">{t.id}</td><td className="px-4 py-2">{t.patient}</td><td className="px-4 py-2">{t.procedure}</td>
               <td className="px-4 py-2 font-mono text-xs">{t.tooth}</td><td className="px-4 py-2 text-muted-foreground">{t.date}</td><td className="px-4 py-2 font-mono">{t.cost} ₾</td><td className="px-4 py-2"><Pill s={t.status} /></td>
             </tr>))}</tbody>
         </table>
       </Panel>
-      <TryAsCustomer className="h-[460px] lg:col-span-5" />
+      </>}
+      {(!view || view === "contact") && <TryAsCustomer className="h-[460px] lg:col-span-5" />}
     </div>
   );
 }
