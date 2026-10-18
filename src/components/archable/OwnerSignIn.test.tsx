@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { OwnerSignIn } from "./OwnerSignIn";
+import { OwnerSignIn, ownerHomeSearch } from "./OwnerSignIn";
 
 const { complete, navigate, client } = vi.hoisted(() => ({
   complete: vi.fn(), navigate: vi.fn(), client: {},
@@ -35,7 +35,14 @@ describe("Owner sign-in lifecycle", () => {
     finish?.({ ok: true, session: {} });
     const button = await screen.findByRole("button");
     fireEvent.click(button);
-    expect(navigate).toHaveBeenCalledWith({ to: "/" });
+    expect(navigate).toHaveBeenCalledWith({ to: "/", search: { biz: "" } });
+  });
+
+  it("targets the tenant workspace from the host slug", () => {
+    expect(ownerHomeSearch("flora.archable.run")).toEqual({ biz: "flora" });
+    expect(ownerHomeSearch("pr-12--marani.archable.run")).toEqual({ biz: "marani" });
+    expect(ownerHomeSearch("localhost")).toEqual({ biz: "" });
+    expect(ownerHomeSearch("api.archable.run")).toEqual({ biz: "" });
   });
 
   it.each(["expired", "none", "unavailable"])("does not permit Owner Mode for %s", async (reason) => {

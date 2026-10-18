@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Boxes } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { completeSignIn } from "@/auth/web-link";
+import { tenantFromHost } from "@/chat/session";
 import { supabase } from "@/lib/supabase";
 
 type Status = "waiting" | "ok" | "expired" | "none" | "unavailable";
@@ -14,6 +15,11 @@ const messages: Record<Status, string> = {
   none: "To sign in, open @ArchableBot in Telegram and send /web. You'll get a one-time link.",
   unavailable: "Sign-in is unavailable right now. Please try again later.",
 };
+
+/** Where "Open Owner Mode" leads: on a tenant host, straight into that tenant's workspace. */
+export function ownerHomeSearch(host: string): { biz: string } {
+  return { biz: tenantFromHost(host)?.slug ?? "" };
+}
 
 export function OwnerSignIn() {
   const navigate = useNavigate();
@@ -39,7 +45,7 @@ export function OwnerSignIn() {
         </h1>
         <p role="status" aria-live="polite" className="text-sm leading-relaxed [overflow-wrap:anywhere]">{messages[status]}</p>
         {status === "ok" && (
-          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/" })}>
+          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/", search: ownerHomeSearch(window.location.hostname) })}>
             Open Owner Mode
           </Button>
         )}
