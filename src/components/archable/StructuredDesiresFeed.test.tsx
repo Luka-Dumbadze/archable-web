@@ -18,7 +18,9 @@ describe("Structured desire controls", () => {
   it("unlinks the selected chapter from its desire", () => {
     const feed = props();
     render(<StructuredDesiresFeed {...feed} />);
-    fireEvent.click(screen.getAllByRole("button", { name: "Unlink", exact: true })[0]);
+    const control = screen.getAllByRole("button", { name: /^Unlink$/ })[0];
+    if (!control) throw new Error("Missing unlink control");
+    fireEvent.click(control);
     expect(feed.unlink).toHaveBeenCalledExactlyOnceWith("dddddddd-0000-0000-0000-000000000014", "c0000000-0000-0000-0000-00000000000a");
   });
 
