@@ -308,8 +308,8 @@
 .app-data-table th { padding-left: 16px; padding-right: 16px; }
 .customer-avatar { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 50%; background: var(--secondary); color: var(--body-foreground); font-size: 11px; font-weight: 600; }
 .chat-panel [role=log] { background: var(--background); }
-.chat-panel [role=log] .bg-primary { background: var(--chat-customer); color: var(--chat-foreground); border-radius: 16px 16px 4px 16px; }
-.chat-panel [role=log] .bg-secondary { background: var(--secondary); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; color: var(--body-foreground); }
+.chat-panel [role=log] div.bg-primary { background: var(--chat-customer); color: var(--chat-foreground); border-radius: 16px 16px 4px 16px; }
+.chat-panel [role=log] div.bg-secondary { background: var(--secondary); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; color: var(--body-foreground); }
 .chat-panel form { padding: 16px; gap: 12px; background: var(--card); }
 .chat-panel form input { background: transparent; border-color: transparent; box-shadow: none; height: 44px; }
 .chat-panel form input:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; box-shadow: none; }
