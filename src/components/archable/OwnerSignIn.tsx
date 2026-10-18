@@ -16,6 +16,11 @@ const messages: Record<Status, string> = {
   unavailable: "Sign-in is unavailable right now. Please try again later.",
 };
 
+/** Where "Open Owner Mode" leads: on a tenant host, straight into that tenant's workspace. */
+export function ownerHomeSearch(host: string): { biz: string } {
+  return { biz: tenantFromHost(host)?.slug ?? "" };
+}
+
 export function OwnerSignIn() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<Status>("waiting");
