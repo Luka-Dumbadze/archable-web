@@ -40,6 +40,9 @@ export function createShell(d: ShellDeps) {
   let channel: RealtimeChannel | null = null;
   let refreshing: Promise<void> | null = null;
   let again = false;
+  let booting: Promise<ShellSnapshot> | null = null;
+  let authSubscription: { unsubscribe(): void } | null = null;
+  let disposed = false;
 
   const set = (patch: Partial<ShellSnapshot>) => { snap = { ...snap, ...patch }; for (const l of listeners) l(); };
 
@@ -50,7 +53,10 @@ export function createShell(d: ShellDeps) {
   }
   async function getUi(digest: string): Promise<unknown> {
     if (uiCache.has(digest)) return uiCache.get(digest);
-    const r = await f(`${API}/v1/bundles/${encodeURIComponent(digest)}/ui`);
+    const session = d.supabase ? (await d.supabase.auth.getSession()).data.session : null;
+    const r = await f(`${API}/v1/bundles/${encodeURIComponent(digest)}/ui`, {
+      headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+    });
     if (!r.ok) throw new Error(`ui ${r.status}`);
     const ui: unknown = await r.json();
     uiCache.set(digest, ui);
@@ -94,12 +100,22 @@ export function createShell(d: ShellDeps) {
       });
   }
 
-  return {
-    getSnapshot: () => snap,
-    subscribe: (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; },
-
-    /** Boots once: manifest, projection, then the live subscription. */
-    async boot(): Promise<ShellSnapshot> {
+  function boot(): Promise<ShellSnapshot> {
+    if (booting) return booting;
+    disposed = false;
+    if (d.supabase && !authSubscription) {
+      authSubscription = d.supabase.auth.onAuthStateChange((event, session) => {
+        if (!session || (event !== "SIGNED_IN" && event !== "TOKEN_REFRESHED")) return;
+        // Leave the auth callback before calling getSession (Supabase holds its auth lock here).
+        setTimeout(() => {
+          void (async () => {
+            await booting;
+            if (!disposed && snap.status !== "ready") await boot();
+          })();
+        }, 0);
+      }).data.subscription;
+    }
+    booting = (async () => {
       try {
         const m = await getManifest();
         set({ status: "ready", manifest: m, ui: await getUi(m.digest) });
@@ -108,7 +124,16 @@ export function createShell(d: ShellDeps) {
         set({ status: "unavailable" });
       }
       return snap;
-    },
+    })().finally(() => { booting = null; });
+    return booting;
+  }
+
+  return {
+    getSnapshot: () => snap,
+    subscribe: (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; },
+
+    /** Boots once: manifest, projection, then the live subscription. */
+    boot,
 
     /** Live tool calls on this tenant (Developer Mode's graph pulses). One channel serves both events. */
     onToolCall(l: (e: ToolCallEvent) => void): () => void {
@@ -126,6 +151,9 @@ export function createShell(d: ShellDeps) {
     },
 
     async dispose() {
+      disposed = true;
+      authSubscription?.unsubscribe();
+      authSubscription = null;
       if (channel && d.supabase) await d.supabase.removeChannel(channel);
       channel = null;
       listeners.clear();

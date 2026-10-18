@@ -357,7 +357,8 @@ async function p51() {
   });
   await step(C, 'GET /v1/bundles/:digest/ui: immutable, and readable from the tenant page', async () => {
     need(m, 'no manifest');
-    const r = await api(`/v1/bundles/${encodeURIComponent(m.digest)}/ui`);
+    skipIf(!TOKEN, 'set OWNER_TOKEN to read the protected UI projection');
+    const r = await api(`/v1/bundles/${encodeURIComponent(m.digest)}/ui`, { token: TOKEN });
     need(r.status === 200 && r.json !== null, `got ${r.status} ${clip(r.text)}`);
     need(/immutable/.test(r.headers.get('cache-control') ?? ''), `Cache-Control is ${r.headers.get('cache-control')}`);
     // The shell fetches this cross-origin; without the header the browser blocks it and the shell shows "unavailable".

@@ -35,17 +35,65 @@ function realtime(session: { access_token: string } | null = { access_token: "jw
     on: vi.fn((_type: string, filter: { event: string }, cb: (m: { payload?: any }) => void) => { if (filter.event === "epoch_flip") rt.flip = cb; if (filter.event === "tool_call") rt.toolCall = cb; return channel; }),
     subscribe: vi.fn((cb: (s: string) => void) => { rt.status = cb; return channel; }),
   };
+  let authChange: ((event: string, session: { access_token: string } | null) => void) | undefined;
+  const unsubscribe = vi.fn(() => { authChange = undefined; });
+  const signIn = (token: string) => {
+    session = { access_token: token };
+    authChange?.("SIGNED_IN", session);
+  };
   const client = {
-    auth: { getSession: vi.fn(async () => ({ data: { session } })) },
+    auth: {
+      getSession: vi.fn(async () => ({ data: { session } })),
+      onAuthStateChange: vi.fn((cb: typeof authChange) => {
+        authChange = cb;
+        return { data: { subscription: { unsubscribe } } };
+      }),
+    },
     realtime: { setAuth: vi.fn(async () => {}) },
     channel: vi.fn((topic: string, opts: unknown) => { rt.topic = topic; rt.opts = opts; return channel; }),
     removeChannel: vi.fn(async () => { rt.removed = true; return "ok"; }),
   };
-  return { client: client as unknown as SupabaseClient & typeof client, rt };
+  return { client: client as unknown as SupabaseClient & typeof client, rt, signIn, unsubscribe };
 }
 const settle = () => new Promise((r) => setTimeout(r, 20));
 
 describe("shell boot", () => {
+  it("retries a rejected projection after sign-in with the fresh bearer token", async () => {
+    const a = api(manifest(7, "sha256:aaa"));
+    const r = realtime(null);
+    const headers: (string | null)[] = [];
+    const protectedFetch: typeof fetch = async (url, init) => {
+      if (String(url).includes("/v1/bundles/")) {
+        const authorization = new Headers(init?.headers).get("Authorization");
+        headers.push(authorization);
+        if (authorization !== "Bearer fresh-owner") return new Response("{}", { status: 403 });
+      }
+      return a.fetchImpl(url, init);
+    };
+    const s = createShell({ supabase: r.client, fetch: protectedFetch });
+    expect((await s.boot()).status).toBe("unavailable");
+    r.signIn("fresh-owner");
+    await vi.waitFor(() => expect(s.getSnapshot().status).toBe("ready"));
+    expect(headers).toEqual([null, "Bearer fresh-owner"]);
+    expect(r.client.realtime.setAuth).toHaveBeenCalledWith("fresh-owner");
+    expect(r.client.channel).toHaveBeenCalledTimes(1);
+    await s.dispose();
+    expect(r.unsubscribe).toHaveBeenCalledOnce();
+  });
+
+  it("shares concurrent boot attempts and sends the session token to the projection endpoint", async () => {
+    const a = api(manifest(7, "sha256:aaa"));
+    const r = realtime();
+    const fetchImpl = vi.fn(a.fetchImpl);
+    const s = createShell({ supabase: r.client, fetch: fetchImpl });
+    await Promise.all([s.boot(), s.boot()]);
+    expect(a.calls("/v1/bundles/")).toBe(1);
+    const request = fetchImpl.mock.calls.find(([url]) => String(url).includes("/v1/bundles/"));
+    expect(new Headers(request?.[1]?.headers).get("Authorization")).toBe("Bearer jwt-owner");
+    expect(r.client.channel).toHaveBeenCalledTimes(1);
+    await s.dispose();
+  });
+
   it("loads the manifest and its UI projection, then joins the private tenant topic with the owner's session", async () => {
     const a = api(manifest(7, "sha256:aaa"));
     const r = realtime();
