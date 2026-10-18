@@ -97,7 +97,7 @@ function Retail({ b, view }: { b: Business; view?: "contact" | "crm" | "operatio
           </div>
         </div>
       </Panel>
-      <TryAsCustomer className="h-[460px] lg:col-start-2 lg:row-start-1" />
+      <TryAsCustomer className="order-last h-[460px] lg:order-none lg:col-start-2 lg:row-start-1" />
       </>}
       {(!view || view === "operations") && <>
       <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-2">
