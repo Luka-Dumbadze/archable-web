@@ -24,3 +24,4 @@
 - System Map telemetry subscribes browser-side to maintained tool-call broadcasts; observed counts/latency remain separate from local simulations and labeled fixture stats, with node latency derived from incident calls, because no node health or telemetry contract exists. Supplied routes, positions, and label widths remain unchanged.
 
 - Global presentation tokens and shared overlay/control primitives harmonize all screens; protected owner chat is styled through its Workspace chat-panel wrapper so externally maintained files remain unchanged. Storage file selection is explicitly a non-persistent local preview until an upload service contract exists.
+- Focused chat redesigns use the modern-chat wrapper with direct-section selectors for the protected owner panel; change-card presentation lives in DevMode and StructuredDesiresFeed while all actions and rationale remain delegated to maintained helpers.
