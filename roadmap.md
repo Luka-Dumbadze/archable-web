@@ -1,3 +1,4 @@
+- [ ] Add structured desires above existing developer demo desires without duplicate D-14; verify linked chats, unlink/reset, rationale, and 360 px layout.
 - [x] Add the owner Architect chat with unchanged helpers, action controls, and owner rationale sheet; 28 tests pass and the demo send → draft → reasons → close flow works on desktop and 360 px with no overflow or runtime errors.
 - [ ] Verify live Architect chat: requires owner sign-in on a tenant host and a reachable external service; demo conversation and supplied helper contract tests pass.
 - [x] Add shared rationale cards, Marani's waiting item, and developer D-14/source details; 28 tests pass and both modes verified at 360 px with no overflow or runtime errors.
