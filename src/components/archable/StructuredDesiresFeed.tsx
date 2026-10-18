@@ -33,7 +33,7 @@ export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDem
         {error === "forbidden" ? "Only the owner or a developer can unlink chats." : "Couldn't unlink right now. Please try again."}
       </p>}
       {load.desires.map((desire) => (
-        <article key={desire.id} aria-label={`Desire D-${desire.number}`} className="surface-interactive min-w-0 overflow-hidden rounded-2xl border bg-card p-6 sm:p-8">
+        <article key={desire.id} aria-label={`Desire D-${desire.number}`} className="change-card surface-interactive min-w-0">
           <header className="space-y-5">
             <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground">
               <span className="mr-auto text-foreground">D-{desire.number}</span>
@@ -42,7 +42,7 @@ export function StructuredDesiresFeed({ load, unlink, unlinking, error, resetDem
             <h3 className="max-w-2xl text-lg font-semibold leading-relaxed [overflow-wrap:anywhere]">{desire.statement}</h3>
             <p className="pill max-w-full border border-success/20 bg-success/10 font-mono text-success [overflow-wrap:anywhere]">{impactChip(desire.impact)}</p>
           </header>
-          <Tabs defaultValue="chats" className="mt-7 min-w-0">
+          <Tabs defaultValue="chats" className="change-details min-w-0">
             <TabsList aria-label={`D-${desire.number} details`} className="change-tabs h-auto w-full justify-start gap-5 rounded-none border-b bg-transparent p-0">
               <TabsTrigger value="chats" className="gap-2"><MessageSquare className="size-3.5" />Linked chats</TabsTrigger>
               <TabsTrigger value="rationale" className="gap-2"><Info className="size-3.5" />Rationale</TabsTrigger>

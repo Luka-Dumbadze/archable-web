@@ -72,6 +72,8 @@
   --color-chat-customer: var(--chat-customer);
   --color-chat-foreground: var(--chat-foreground);
   --color-divider: var(--divider);
+  --color-workspace-action: var(--workspace-action);
+  --color-workspace-action-foreground: var(--workspace-action-foreground);
   --font-sans: "Noto Sans Georgian", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
@@ -90,6 +92,8 @@
   --chat-customer: oklch(0.511 0.262 276.966);
   --chat-foreground: oklch(0.99 0 0);
   --divider: oklch(1 0 0 / 5%);
+  --workspace-action: oklch(0.94 0.003 286);
+  --workspace-action-foreground: oklch(0.18 0.006 286);
   --shadow-ambient: 0 0 24px oklch(1 0 0 / 3%);
   --shadow-overlay: 0 24px 80px oklch(0 0 0 / 45%);
   --shadow-chart: 0 0 18px color-mix(in oklab, var(--app-analytics) 25%, transparent);
@@ -333,6 +337,48 @@
 .business-chat:has([role=log]:empty) .business-chat-empty { display: flex; }
 .business-chat [role=log] > div > div.flex { margin-top: 16px; gap: 10px; }
 .business-chat [role=log] button { min-height: 36px; padding: 8px 14px; border-radius: 999px; }
+.window-theme {
+  --primary: var(--workspace-action);
+  --primary-foreground: var(--workspace-action-foreground);
+  --ring: var(--workspace-action);
+  --chart-1: var(--workspace-action);
+}
+.workspace-light.window-theme { --workspace-action: var(--foreground); --workspace-action-foreground: var(--card); }
+.chat-window { border-color: var(--border-hover); box-shadow: var(--shadow-overlay); }
+.chat-window > button { top: 24px; right: 24px; width: 32px; height: 32px; border-radius: 10px; border-color: var(--border); background: var(--card-hover); }
+.customer-chat { overflow: hidden; }
+.customer-chat > header { background: var(--card); padding: 28px 32px 24px; }
+.customer-chat [role=log], .business-chat [role=log] { background: var(--lane); }
+.window-theme.modern-chat form, .window-theme .modern-chat form { position: relative; padding: 20px 24px; border-top: 1px solid var(--border); background: var(--card); align-items: center; }
+.window-theme.modern-chat form input, .window-theme .modern-chat form input { background: var(--secondary); border-color: var(--border); }
+.window-theme.modern-chat form button[type=submit], .window-theme .modern-chat form button[type=submit] { background: var(--workspace-action); color: var(--workspace-action-foreground); box-shadow: none; border: 1px solid transparent; border-radius: 12px; }
+.window-theme button:focus-visible { outline-color: var(--workspace-action); }
+.business-chat > section { height: 100%; background: var(--card); }
+.business-chat > section > header { min-height: 144px; padding: 36px 64px 28px 100px; }
+.business-chat-badge { top: 36px; left: 28px; }
+.business-chat-empty { inset: 144px 0 89px; }
+.business-chat [role=log] button { border-radius: 10px; min-height: 40px; padding: 10px 16px; box-shadow: none; }
+.business-chat [role=log] button.bg-primary { background: var(--workspace-action); color: var(--workspace-action-foreground); }
+.evolution-view { padding-bottom: 24px; }
+.change-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.change-card > header { padding: 24px 28px; }
+.change-card > .change-details { margin: 0; border-top: 1px solid var(--border); padding: 0 28px 24px; background: var(--lane); }
+.change-card .change-tabs { gap: 24px; }
+.change-card button { box-shadow: none; }
+.change-actions { margin: 24px -28px -24px; padding: 16px 28px; background: var(--lane); border-top: 1px solid var(--border); }
+@media (min-width: 640px) {
+  .business-chat.chat-window { top: 16px; right: 16px; bottom: 16px; height: calc(100dvh - 32px); border: 1px solid var(--border-hover); border-radius: 20px; }
+}
+@media (max-width: 639px) {
+  .customer-chat > header { padding: 24px 20px 20px; }
+  .chat-window > button { top: 16px; right: 16px; }
+  .window-theme.modern-chat form, .window-theme .modern-chat form { padding: 16px; gap: 8px; }
+  .business-chat > section > header { padding: 28px 48px 24px 84px; }
+  .business-chat-badge { top: 28px; left: 20px; }
+  .change-card > header { padding: 20px; }
+  .change-card > .change-details { padding: 0 20px 20px; }
+  .change-actions { margin: 20px -20px -20px; padding: 16px 20px; }
+}
 .change-tabs [role=tab] { border-radius: 0; background: transparent; border-bottom: 2px solid transparent; padding: 14px 0; box-shadow: none; color: var(--muted-foreground); font-size: 12px; }
 .change-tabs [role=tab][data-state=active] { background: transparent; border-bottom-color: var(--primary); color: var(--foreground); box-shadow: none; }
 @media (max-width: 639px) {
