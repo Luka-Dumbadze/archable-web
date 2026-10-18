@@ -7,11 +7,14 @@ import { toast } from "sonner";
 import type { Business, Desire } from "@/lib/businesses";
 import { RationaleCard } from "@/shared/RationaleCard";
 import { DEMO_CHANGES, demoRationale } from "@/shared/fixtures/d14";
+import { useDesires } from "@/dev/use-desires";
+import { StructuredDesiresFeed } from "./StructuredDesiresFeed";
 
 const A2AGraph = lazy(() => import("./A2AGraph"));
 
 export function DevMode({ b }: { b: Business }) {
   const [why, setWhy] = useState<Desire | null>(null);
+  const { load, unlink, unlinking, error, resetDemo } = useDesires(b.id);
   const changes = DEMO_CHANGES[b.id] ?? [];
   const desires = [
     ...b.desires.filter((desire) => !changes.some((change) => change.desire === desire.id)),
@@ -33,7 +36,8 @@ export function DevMode({ b }: { b: Business }) {
       <section className="rounded-xl border bg-card">
         <div className="px-6 pt-5 text-sm font-medium">Desires</div>
         <div className="space-y-4 p-6">
-          {desires.map((d) => (
+          <StructuredDesiresFeed load={load} unlink={unlink} unlinking={unlinking} error={error} resetDemo={resetDemo} />
+          {desires.filter((d) => !(d.id === "D-14" && load.state === "ready" && load.desires.some((desire) => desire.number === 14))).map((d) => (
             <div key={d.id} className="rounded-lg border p-4">
               <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                 <span className="text-foreground">{d.id}</span>· {d.status} · {d.tier}
