@@ -1,4 +1,4 @@
-// Copied from archable@6ce4006:packages/contracts/src/index.ts. Do not edit here.
+// Copied from archable@e48aba0:packages/contracts/src/index.ts. Do not edit here.
 // packages/contracts/src/index.ts: types shared by the API and the shell. The shell imports only this package.
 
 export type Tier = 0 | 1 | 2 | 3 | 4;
@@ -133,6 +133,28 @@ export interface UiProjection extends BundleUi {
   apps: { app_id: string; title: string; template: string; agent_id: string | null; nav_order: number }[];
   objects: Record<string, { schema: JsonSchema; key: string | null; title: string; edit_roles: string[]; field_acl: Record<string, string[]> }>;
   labels: { nodes: Record<string, Record<string, string>>; values: Record<string, Record<string, string>> };
+}
+
+// ── Desires Feed (Developer Mode; DEV-1's proposal, PROGRESS.md Q9 (4)) ──
+
+export interface DesireImpactView {                // one row of public.desire_impact(); money in tetri
+  chapters: number; customers: number; quoted: number; abandoned: number; abandoned_value: number; ordered: number;
+  first_seen: string | null; last_seen: string | null;
+}
+export interface DesireChat {
+  chapter_id: string;
+  customer: string | null;                         // the customer's display name, if the chat is linked to one
+  opened_at: string;
+  last_quote_total: number | null;                 // tetri
+  ordered: boolean;
+  linked_by: string;                               // 'jev:desire.dedupe' | 'owner' | 'developer'
+  excerpt: string | null;                          // the chat's first customer message, shortened
+}
+export interface DesireView {
+  id: string; number: number; statement: string; status: string; tier: number | null;
+  impact: DesireImpactView;
+  chats: DesireChat[];                             // linked chats only; an unlinked chat leaves this list
+  rationale_card: RationaleCard | null;
 }
 
 // ── Owner conversation (plan §8.4 addition): what a button is, so the web and Telegram render the same choices ──
