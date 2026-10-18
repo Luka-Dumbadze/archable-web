@@ -20,7 +20,7 @@ function AppNode({ data, selected }: NodeProps<Node<A2ANodeData>>) {
   const latency = medianLatency(received.length ? received : samples);
   return <div className={`telemetry-node ${data.external ? "telemetry-external border-dashed" : ""} ${selected ? "ring-2 ring-primary/30" : ""}`}>
     <Handle type="target" position={Position.Left} />
-    <div className="flex min-w-0 items-center justify-between gap-1"><span className="min-w-0 break-words text-[11px] font-semibold leading-tight">{data.title}</span><span className={`telemetry-health ${telemetry.connected || telemetry.demo ? "is-active" : ""}`}><span className="radar-dot"><span /></span>{telemetry.demo ? "SAMPLE" : telemetry.connected ? "ACTIVE" : "OFFLINE"}</span></div>
+    <div className="flex min-w-0 items-center justify-between gap-1"><span className="min-w-0 break-words text-[11px] font-semibold leading-tight">{data.title}</span><span className={`telemetry-health ${telemetry.connected || telemetry.demo ? "is-active" : ""}`}><span className="radar-dot"><span /></span>{telemetry.demo ? "SAMPLE" : telemetry.connected ? received.length ? "ACTIVE" : "CONNECTED" : "OFFLINE"}</span></div>
     <div className="mt-1 font-mono text-[8px] text-muted-foreground">{data.external ? "MCP External" : "In-Process Engine"}</div>
     <div className="mt-1 flex flex-wrap items-center justify-between gap-1 font-mono text-[9px]"><span>p50: {latency === null ? "—" : `${latency}ms`}{telemetry.demo && latency !== null ? " · sample" : ""}</span><span className="rounded border px-1 text-muted-foreground">{data.node.tools.length} Tools Mounted</span></div>
     <Handle type="source" position={Position.Right} />

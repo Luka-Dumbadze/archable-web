@@ -35,7 +35,7 @@ export function DevMode({ b }: { b: Business }) {
         <TabsTrigger value="desires" className="min-w-0 flex-1 whitespace-normal rounded-none border-b-2 border-transparent px-2 py-4 text-xs data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none sm:flex-none sm:px-5 sm:text-sm">Evolution &amp; Changes</TabsTrigger>
       </TabsList>
       <TabsContent value="activity" className="mt-0"><TeamActivity /></TabsContent>
-      <TabsContent value="architecture" className="mt-0">
+      <TabsContent value="architecture" className="mt-0 pb-24">
       <section aria-label="App map" className="h-[600px] min-w-0 sm:h-[680px]">
         <ClientOnly fallback={<div className="h-full bg-muted/30" />}>
           <Suspense fallback={<div className="h-full bg-muted/30" />}><A2AGraph /></Suspense>
