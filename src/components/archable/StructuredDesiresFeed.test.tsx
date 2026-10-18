@@ -50,4 +50,21 @@ describe("Structured desire controls", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset sample" }));
     expect(feed.resetDemo).toHaveBeenCalledTimes(1);
   });
+
+  it("renders the rationale card when the desire has one", () => {
+    const feed = props();
+    render(<StructuredDesiresFeed {...feed} />);
+    openRationale();
+    expect(screen.getByText("What happened")).toBeInTheDocument();
+    expect(screen.queryByText("Rationale is being drafted...")).not.toBeInTheDocument();
+  });
+
+  it("says the rationale is being drafted when the desire has no card yet", () => {
+    const feed = props();
+    feed.load.desires = feed.load.desires.map((desire) => ({ ...desire, rationale_card: null as unknown as RationaleCard }));
+    render(<StructuredDesiresFeed {...feed} />);
+    openRationale();
+    expect(screen.getByText("Rationale is being drafted...")).toBeInTheDocument();
+    expect(screen.queryByText("What happened")).not.toBeInTheDocument();
+  });
 });
