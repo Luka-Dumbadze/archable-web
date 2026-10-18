@@ -25,5 +25,5 @@ function Index() {
   const navigate = useNavigate();
   const b = getBusiness(biz);
   if (!b) return <Genesis onLaunch={(x) => navigate({ to: "/", search: { biz: x.id } })} />;
-  return <Workspace business={b} mode="owner" view={view} />;
+  return <Workspace business={b} mode="owner" view={view ?? "apps"} />;
 }
