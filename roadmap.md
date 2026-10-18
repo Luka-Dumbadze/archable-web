@@ -29,3 +29,4 @@
 - [x] Keep every edge label visible in Developer Mode: small ±40 px offsets for parallel edges, labels at edge midpoints with deterministic de-overlap, and a wider fit view; verified by browser click and geometry checks.
 - [x] Show contract schemas as field rows (name, type or enum, required mark, collapsible nesting), "No output" for null outputs, and the operation id in small monospace; 20 tests pass and the build is clean.
 - [x] Polish app grid to three columns on wide screens and raise Assigned/Customer pill contrast with a lighter indigo token; verified 3+2 rows at 1280 px and readable pills in Contact Center, Operations and CRM.
+- [x] Show the business system title exactly as configured (no added suffix) and keep status badges readable in light mode; verified header text and badge contrast in dark and light themes.

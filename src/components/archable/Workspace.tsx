@@ -38,7 +38,7 @@ export function Workspace({ business, mode, view = "apps" }: { business: Busines
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-4 py-4 sm:px-8">
           <DropdownMenu>
             <DropdownMenuTrigger asChild><Button variant="ghost" className="h-auto min-h-11 min-w-0 flex-1 justify-start gap-2 whitespace-normal rounded-xl px-0 text-left">
-              <span className="min-w-0 break-words text-sm font-semibold [overflow-wrap:anywhere] sm:text-base">{name}<span className="ml-1.5 font-normal text-muted-foreground">OS</span></span><ChevronDown className="size-3 shrink-0 text-muted-foreground" />
+              <span className="min-w-0 break-words text-sm font-semibold [overflow-wrap:anywhere] sm:text-base">{name}</span><ChevronDown className="size-3 shrink-0 text-muted-foreground" />
             </Button></DropdownMenuTrigger>
             <DropdownMenuContent>{BUSINESSES.map((b) => <DropdownMenuItem key={b.id} asChild><Link to={mode === "dev" ? "/dev" : "/"} search={{ biz: b.id }}>{b.emoji} {b.name}</Link></DropdownMenuItem>)}</DropdownMenuContent>
           </DropdownMenu>
