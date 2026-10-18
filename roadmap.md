@@ -1,4 +1,4 @@
-- [ ] Add shared rationale cards, Marani's waiting item, and developer D-14/source details; verify both modes at 360 px.
+- [x] Add shared rationale cards, Marani's waiting item, and developer D-14/source details; 28 tests pass and both modes verified at 360 px with no overflow or runtime errors.
 - [x] Add the Owner Mode customer console using unchanged helpers; verify sending, reset, and desktop/360 px layout with test responses (17 tests pass).
 - [ ] Verify live customer-console replies: requires owner sign-in and a reachable external service; successful browser checks used test-only sign-in and replies.
 - [ ] Show live conversation details: blocked until the external service supplies a detail-read contract; supplied links resolve to an unavailable-details page.
