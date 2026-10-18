@@ -71,6 +71,7 @@
   --color-order: var(--order);
   --color-chat-customer: var(--chat-customer);
   --color-chat-foreground: var(--chat-foreground);
+  --color-customer-accent: var(--customer-accent);
   --color-divider: var(--divider);
   --color-workspace-action: var(--workspace-action);
   --color-workspace-action-foreground: var(--workspace-action-foreground);
@@ -91,6 +92,7 @@
   --order: oklch(0.194 0.009 285.8);
   --chat-customer: oklch(0.511 0.262 276.966);
   --chat-foreground: oklch(0.99 0 0);
+  --customer-accent: oklch(0.8 0.1 255);
   --divider: oklch(1 0 0 / 5%);
   --workspace-action: oklch(0.94 0.003 286);
   --workspace-action-foreground: oklch(0.18 0.006 286);

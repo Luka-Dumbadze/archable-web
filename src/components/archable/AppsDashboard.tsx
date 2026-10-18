@@ -9,7 +9,7 @@ export function AppsDashboard({ onOpen }: { onOpen: (app: WorkspaceAppId) => voi
         <h1 id="apps-title" className="text-3xl font-semibold">Apps</h1>
         <span className="font-mono text-xs text-muted-foreground">{String(WORKSPACE_APPS.length).padStart(2, "0")} / WORKSPACE</span>
       </div>
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {WORKSPACE_APPS.map(({ id, title, icon: Icon, tone, description }) => (
           <article key={id} className={`app-tile ${tone} group relative min-w-0 rounded-2xl border bg-card transition-colors`}>
             <Button variant="ghost" onClick={() => onOpen(id)} aria-label={`Open ${title}`} className="h-auto min-h-[210px] w-full flex-col items-start justify-start whitespace-normal rounded-2xl p-7 text-left hover:bg-transparent sm:min-h-[224px] sm:p-8">
