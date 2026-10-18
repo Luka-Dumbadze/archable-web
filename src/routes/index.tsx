@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { Genesis } from "@/components/archable/Genesis";
 import { Workspace } from "@/components/archable/Workspace";
@@ -7,6 +7,9 @@ import { bizSearch } from "@/lib/biz-search";
 
 export const Route = createFileRoute("/")({
   validateSearch: zodValidator(bizSearch),
+  beforeLoad: ({ search }) => {
+    if (search.view === "team") throw redirect({ to: "/dev", search: { biz: search.biz }, replace: true });
+  },
   head: () => ({
     meta: [
       { title: "Archable — The AI-Native Enterprise Compiler" },

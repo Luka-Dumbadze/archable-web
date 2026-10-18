@@ -7,7 +7,7 @@ export function AppsDashboard({ onOpen }: { onOpen: (app: WorkspaceAppId) => voi
     <section aria-labelledby="apps-title" className="animate-fadeup">
       <div className="mb-8 flex items-center justify-between">
         <h1 id="apps-title" className="text-3xl font-semibold">Apps</h1>
-        <span className="font-mono text-xs text-muted-foreground">06 / WORKSPACE</span>
+        <span className="font-mono text-xs text-muted-foreground">{String(WORKSPACE_APPS.length).padStart(2, "0")} / WORKSPACE</span>
       </div>
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
         {WORKSPACE_APPS.map(({ id, title, icon: Icon, tone, description }) => (
