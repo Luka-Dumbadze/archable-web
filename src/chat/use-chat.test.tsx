@@ -1,14 +1,14 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useChat } from "./use-chat";
-import { ChatUnavailable, chatClient, loadGreeting, tenantFromHost } from "./session";
+import { ChatUnavailable, chatClient, loadGreeting, tenantFromLocation } from "./session";
 import type { ChatClient } from "./session";
 import type { Mock } from "vitest";
 import type { ChatMessage } from "@/contracts";
 
 vi.mock("./session", async (original) => ({
   ...await original<typeof import("./session")>(),
-  chatClient: vi.fn(), loadGreeting: vi.fn(), tenantFromHost: vi.fn(),
+  chatClient: vi.fn(), loadGreeting: vi.fn(), tenantFromLocation: vi.fn(),
 }));
 
 const message = (id: number, author: ChatMessage["author"], text: string): ChatMessage => ({ id, author, text, at: "now" });
@@ -17,7 +17,7 @@ let signal: AbortSignal | undefined;
 let client: { [K in keyof ChatClient]: Mock<ChatClient[K]> };
 
 beforeEach(() => {
-  vi.mocked(tenantFromHost).mockReturnValue({ slug: "marani", env: "pr-58" });
+  vi.mocked(tenantFromLocation).mockReturnValue({ slug: "marani", env: "pr-58" });
   vi.mocked(loadGreeting).mockResolvedValue("გამარჯობა!");
   client = {
     start: vi.fn().mockResolvedValue({ resumed: true, messages: [message(1, "agent", "History")] }),
@@ -55,7 +55,7 @@ describe("chat page lifecycle", () => {
   });
 
   it("keeps demo sends off the API on preview hosts", async () => {
-    vi.mocked(tenantFromHost).mockReturnValue(null);
+    vi.mocked(tenantFromLocation).mockReturnValue(null);
     vi.useFakeTimers();
     const { result } = renderHook(() => useChat("Flora"));
     expect(result.current.greeting).toBe("Hi! Welcome to Flora. How can I help?");
