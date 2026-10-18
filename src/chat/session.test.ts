@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatMessage } from "@/contracts";
-import { API, ChatUnavailable, chatClient, loadGreeting, tenantFromHost } from "./session";
+import { API, ChatUnavailable, chatClient, loadGreeting, tenantFromHost, tenantFromLocation } from "./session";
 
 // A fake of the chat API contract (archable plan §6.5): sessions keyed by secret, a transcript per session,
 // and an optional script of status codes to force 401/202/429 paths.
@@ -60,6 +60,39 @@ describe("tenantFromHost", () => {
   });
   it.each(["api.archable.run", "a--b.archable.run", "archable.run", "marani.lovable.app", "localhost"])("refuses %s", (h) => {
     expect(tenantFromHost(h)).toBeNull();
+  });
+});
+
+describe("tenantFromLocation (the chat page)", () => {
+  const at = (url: string) => { const u = new URL(url); return { hostname: u.hostname, origin: u.origin, search: u.search }; };
+
+  it("tenant hosts route by host as before, whatever the query", () => {
+    expect(tenantFromLocation(at("https://marani.archable.run/chat?tenant=kutaisi"))).toEqual({ slug: "marani", env: "prod" });
+    expect(tenantFromLocation(at("https://pr-58--marani.archable.run/chat"))).toEqual({ slug: "marani", env: "pr-58" });
+  });
+
+  it("on the shared frontends ?tenant= names the tenant, over the route's biz=flora default", () => {
+    expect(tenantFromLocation(at("https://archable.lovable.app/chat?tenant=elektro-tbilisi&biz=flora&embed=0"))).toEqual({ slug: "elektro-tbilisi", env: "prod" });
+    expect(tenantFromLocation(at("http://localhost:5173/chat?tenant=kutaisi"))).toEqual({ slug: "kutaisi", env: "prod" });
+    expect(tenantFromLocation(at("https://archable.lovable.app/chat?tenant=marani"))).toEqual({ slug: "marani", env: "prod" });
+  });
+
+  it("?biz= names a tenant unless it's one of the app's demo businesses", () => {
+    expect(tenantFromLocation(at("https://archable.lovable.app/chat?biz=elektro-tbilisi&embed=0"))).toEqual({ slug: "elektro-tbilisi", env: "prod" });
+    for (const demo of ["flora", "marani", "smilecare"]) {
+      expect(tenantFromLocation(at(`https://archable.lovable.app/chat?biz=${demo}&embed=0`))).toBeNull();
+    }
+  });
+
+  it.each([
+    "https://archable.lovable.app/chat",                 // no hint: the demo, as before
+    "https://archable.lovable.app/chat?tenant=api",      // reserved
+    "https://archable.lovable.app/chat?tenant=bad--slug",
+    "https://archable.lovable.app/chat?tenant=Has%20Space",
+    "http://localhost:8080/chat?tenant=kutaisi",         // not a shared frontend: the API refuses its CORS
+    "https://other.lovable.app/chat?tenant=kutaisi",
+  ])("demo mode for %s", (url) => {
+    expect(tenantFromLocation(at(url))).toBeNull();
   });
 });
 

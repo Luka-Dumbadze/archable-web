@@ -2,6 +2,7 @@
 // The page keeps one thing: the session secret, in this origin's (partitioned) localStorage. Everything
 // else (history, replies, staff messages) comes from the chat API with a 1 h bearer token.
 import type { ChatMessage, ChatSessionResponse } from "@/contracts";
+import { BUSINESSES } from "@/lib/businesses";
 
 export const API = (import.meta.env["VITE_ARCHABLE_API_URL"] as string | undefined) ?? "https://api.archable.run";
 
@@ -37,6 +38,23 @@ export function tenantFromHost(host: string): { slug: string; env: string } | nu
   const slug = m?.[2];
   if (!m || !slug || slug.includes("--") || RESERVED.has(slug)) return null;
   return { slug, env: m[1] ? `pr-${Number(m[1])}` : "prod" };
+}
+
+// Lovable and local development serve every tenant from one origin, the API's shared frontends (archable
+// PROGRESS.md Q13). There the chat page runs for real when its URL names a tenant: ?tenant=<slug>, or ?biz=<slug>
+// unless biz is one of this app's demo businesses (the /chat route fills in biz=flora; ?biz=marani stays the demo).
+const SHARED_FRONTENDS = new Set(["https://archable.lovable.app", "http://localhost:5173"]);
+const TENANT_SLUG = /^[a-z][a-z0-9-]{1,30}[a-z0-9]$/;
+const DEMO_BUSINESSES = new Set(BUSINESSES.map((b) => b.id));
+
+/** The chat page's tenant: the host on <slug>.archable.run, a query hint on a shared frontend, else null (demo). */
+export function tenantFromLocation(loc: Pick<Location, "hostname" | "origin" | "search">): { slug: string; env: string } | null {
+  if (!SHARED_FRONTENDS.has(loc.origin)) return tenantFromHost(loc.hostname);
+  const q = new URLSearchParams(loc.search);
+  const biz = q.get("biz");
+  const slug = q.get("tenant") ?? (biz && !DEMO_BUSINESSES.has(biz) ? biz : null);
+  if (!slug || !TENANT_SLUG.test(slug) || slug.includes("--") || RESERVED.has(slug)) return null;
+  return { slug, env: "prod" };
 }
 
 // Greeting and launcher copy from the tenant's spec (public; null when chat is off).
