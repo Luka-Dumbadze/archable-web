@@ -7,7 +7,7 @@ import { StructuredDesiresFeed } from "./StructuredDesiresFeed";
 function openRationale() {
   const tab = screen.getAllByRole("tab", { name: "Rationale" })[0];
   if (!tab) throw new Error("Missing rationale tab");
-  fireEvent.click(tab);
+  fireEvent.mouseDown(tab, { button: 0, ctrlKey: false });
 }
 
 afterEach(cleanup);
