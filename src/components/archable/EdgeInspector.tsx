@@ -11,7 +11,7 @@ export function EdgeInspector({ edge, graph, onClose }: { edge: A2AEdge | null; 
   const data = d.state === "ready" && d.data.edge.id === edge?.id ? d.data : null;
   const title = (id: string) => graph.nodes.find((n) => n.id === id)?.title ?? id;
   return <Sheet open={edge !== null} onOpenChange={(open) => { if (!open) onClose(); }}>
-    <SheetContent side="right" className="workspace-os w-[calc(100%-16px)] overflow-y-auto border-l bg-background text-foreground sm:max-w-xl">
+    <SheetContent side="right" className="workspace-os w-[calc(100%-16px)] overflow-y-auto border-l bg-card text-foreground sm:max-w-xl">
       <SheetHeader className="pr-7 text-left">
         <SheetTitle className="break-words text-base">{edge?.label ?? "Connection"}</SheetTitle>
         <SheetDescription className="break-words">{edge && `${title(edge.from)} → ${title(edge.to)}`}</SheetDescription>
@@ -19,7 +19,7 @@ export function EdgeInspector({ edge, graph, onClose }: { edge: A2AEdge | null; 
       <div className="mt-6 space-y-6">
         {d.state === "failed" ? <p role="alert" className="text-sm text-muted-foreground">No data for this connection right now.</p> : !data ? <div role="status" aria-label="Loading connection" className="space-y-4 motion-safe:animate-pulse"><div className="h-16 rounded bg-muted" /><div className="h-32 rounded bg-muted" /></div> : <>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className={`rounded border px-2 py-1 text-xs ${data.elva.sync === "drift" ? "border-warning/40 text-warning" : data.elva.sync === "in_sync" ? "border-success/40 text-success" : "text-muted-foreground"}`}>Elva · {data.elva.sync === "in_sync" ? "In sync" : data.elva.sync === "drift" ? "Drift" : "Unknown"}</span>
+            <span className={`pill border ${data.elva.sync === "drift" ? "border-warning/40 text-warning" : data.elva.sync === "in_sync" ? "border-success/40 text-success" : "text-muted-foreground"}`}>Elva · {data.elva.sync === "in_sync" ? "In sync" : data.elva.sync === "drift" ? "Drift" : "Unknown"}</span>
             {data.elva.playground_url && <Button asChild size="sm" variant="outline"><a href={data.elva.playground_url} target="_blank" rel="noopener noreferrer"><ExternalLink />Open in Elva Playground</a></Button>}
           </div>
           <section className="space-y-3">

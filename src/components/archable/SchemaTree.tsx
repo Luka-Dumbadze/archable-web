@@ -33,7 +33,7 @@ function Fields({ schema, open }: { schema: JsonSchema; open: boolean }) {
             <details key={name} open={open} className="min-w-0 border-l border-border pl-3">
               <summary className="cursor-pointer break-words py-1 font-mono text-xs text-foreground">
                 {name} <span className="text-muted-foreground">{typeOf(child)}</span>
-                {required.has(name) && <span className="ml-2 rounded border border-warning/40 px-1 py-px text-[10px] text-warning">required</span>}
+                {required.has(name) && <span className="ml-2 rounded-full border border-warning/40 px-1 py-px text-[10px] text-warning">required</span>}
               </summary>
               <Fields schema={nestedSchema} open={false} />
             </details>
@@ -43,7 +43,7 @@ function Fields({ schema, open }: { schema: JsonSchema; open: boolean }) {
           <div key={name} className="flex flex-wrap items-baseline gap-x-2 py-1 font-mono text-xs [overflow-wrap:anywhere]">
             <span>{name}</span>
             <span className="text-muted-foreground">{typeOf(child)}</span>
-            {required.has(name) && <span className="rounded border border-warning/40 px-1 py-px text-[10px] text-warning">required</span>}
+            {required.has(name) && <span className="rounded-full border border-warning/40 px-1 py-px text-[10px] text-warning">required</span>}
           </div>
         );
       })}

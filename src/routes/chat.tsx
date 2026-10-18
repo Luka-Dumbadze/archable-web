@@ -39,7 +39,7 @@ function Chat() {
   };
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="chat-panel flex h-dvh flex-col bg-background">
       {embed ? (
         <header className="flex items-center justify-between border-b px-4 py-3">
           <span className="min-w-0 break-words text-sm font-medium">{!tenantName && b?.emoji} {name}</span>
@@ -51,10 +51,10 @@ function Chat() {
           <span className="min-w-0 break-words text-muted-foreground">/ {name}</span>
         </header>
       )}
-      <main className="mx-auto min-h-0 w-full max-w-xl flex-1 space-y-3 overflow-auto p-4" aria-live="polite">
-        {greeting && <div className="max-w-[80%] rounded-2xl bg-secondary px-3.5 py-2 text-sm [overflow-wrap:anywhere]">{greeting}</div>}
+      <main role="log" aria-label="Conversation" className="mx-auto min-h-0 w-full max-w-xl flex-1 space-y-3 overflow-auto p-4" aria-live="polite">
+        {greeting && <div className="max-w-[80%] rounded-2xl border bg-secondary px-3.5 py-2 text-sm [overflow-wrap:anywhere]">{greeting}</div>}
         {messages.map((m) => (
-          <div key={m.key} className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm [overflow-wrap:anywhere] ${m.author === "customer" ? "ml-auto bg-primary text-primary-foreground" : "bg-secondary"}`}>
+          <div key={m.key} className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm [overflow-wrap:anywhere] ${m.author === "customer" ? "ml-auto bg-chat-customer text-chat-foreground" : "border bg-secondary"}`}>
             {m.author === "staff" && <span className="mb-1 block text-xs text-muted-foreground">Staff</span>}
             {m.text}
           </div>
@@ -66,7 +66,7 @@ function Chat() {
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="mx-auto flex w-full max-w-xl gap-2 border-t p-3">
         <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Message…" aria-label="Message"
           className="min-w-0 flex-1 rounded-md border bg-card px-3 py-2 text-sm outline-none focus:border-primary" />
-        <Button type="submit" disabled={!draft.trim()}><Send /> Send</Button>
+        <Button type="submit" size="icon" aria-label="Send" title="Send" disabled={!draft.trim()}><Send /></Button>
       </form>
     </div>
   );

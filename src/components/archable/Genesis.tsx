@@ -32,10 +32,10 @@ export function Genesis({ onLaunch }: { onLaunch: (b: Business) => void }) {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl flex-col items-center px-6 pt-28 pb-16">
-      <h1 className="animate-fadeup text-5xl font-semibold tracking-tight">Archable</h1>
+      <h1 className="animate-fadeup text-5xl font-semibold tracking-normal">Archable</h1>
       <p className="animate-fadeup mt-3 text-muted-foreground">Describe your business. Get its OS.</p>
 
-      <div className="animate-fadeup mt-10 w-full rounded-xl border bg-card p-4">
+      <div className="animate-fadeup mt-10 w-full rounded-2xl border bg-card p-4">
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -59,16 +59,19 @@ export function Genesis({ onLaunch }: { onLaunch: (b: Business) => void }) {
       </div>
 
       <div className="mt-6 flex flex-wrap justify-center gap-2">
-        {["marani", "flora", "smilecare"].map((id) => BUSINESSES.find((x) => x.id === id)!).map((b) => (
-          <button key={b.id} disabled={!!compiling} onClick={() => compile(b, b.prompt)}
-            className="rounded-full border px-3 py-1.5 text-sm text-muted-foreground transition hover:text-foreground disabled:opacity-50">
+        {["marani", "flora", "smilecare"].flatMap((id) => {
+          const business = BUSINESSES.find(item => item.id === id);
+          return business ? [business] : [];
+        }).map((b) => (
+          <Button key={b.id} variant="outline" disabled={!!compiling} onClick={() => compile(b, b.prompt)}
+            className="rounded-full text-muted-foreground">
             {b.emoji} {b.name}
-          </button>
+          </Button>
         ))}
       </div>
 
       {compiling && (
-        <div className="animate-fadeup mt-10 w-full space-y-2.5 rounded-xl border bg-card p-6 text-sm">
+        <div className="animate-fadeup mt-10 w-full space-y-2.5 rounded-2xl border bg-card p-6 text-sm">
           {steps.map((s, i) => i <= step && (
             <div key={s} className="animate-fadeup flex items-center gap-3">
               {i < step ? <Check className="size-4 text-muted-foreground" /> : <Loader2 className="size-4 animate-spin text-primary" />}
