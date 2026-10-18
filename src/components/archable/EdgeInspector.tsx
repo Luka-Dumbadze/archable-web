@@ -2,18 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { useEdgeDetail } from "@/dev/use-a2a";
 import type { A2AEdge, A2AGraph } from "@/contracts";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { SchemaTree } from "./SchemaTree";
 
 export function EdgeInspector({ edge, graph, onClose }: { edge: A2AEdge | null; graph: A2AGraph; onClose: () => void }) {
   const d = useEdgeDetail(edge?.id ?? null);
-  const mobile = useIsMobile();
   const data = d.state === "ready" && d.data.edge.id === edge?.id ? d.data : null;
   const title = (id: string) => graph.nodes.find((n) => n.id === id)?.title ?? id;
   return <Sheet open={edge !== null} onOpenChange={(open) => { if (!open) onClose(); }}>
-    <SheetContent side={mobile ? "bottom" : "right"} className={mobile ? "max-h-[85dvh] overflow-y-auto rounded-t-lg" : "w-full overflow-y-auto sm:max-w-2xl"}>
+    <SheetContent side="right" className="workspace-os w-[calc(100%-16px)] overflow-y-auto border-l bg-background text-foreground sm:max-w-xl">
       <SheetHeader className="pr-7 text-left">
         <SheetTitle className="break-words text-base">{edge?.label ?? "Connection"}</SheetTitle>
         <SheetDescription className="break-words">{edge && `${title(edge.from)} → ${title(edge.to)}`}</SheetDescription>

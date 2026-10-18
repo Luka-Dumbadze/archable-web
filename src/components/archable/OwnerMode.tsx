@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import type { Business, Order } from "@/lib/businesses";
-import { TryAsCustomer } from "./TryAsCustomer";
 import { useShell } from "@/shell/use-shell";
 import { WaitingForYou } from "./WaitingForYou";
 import { OwnerChat } from "@/owner/OwnerChat";
@@ -73,7 +72,7 @@ function Retail({ b, view }: { b: Business; view?: "contact" | "crm" | "operatio
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {view === "crm" && <Panel title="Customers" icon={Users} className="lg:col-span-2">{chats.map((c) => <div key={c.id} className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-4 last:border-0"><div className="min-w-0"><p className="break-words text-sm font-medium">{c.customer}</p><p className="mt-1 break-words text-sm text-muted-foreground">{c.last}</p></div><span className="text-xs text-muted-foreground">{c.channel} · {c.time}</span></div>)}</Panel>}
       {(!view || view === "contact") && <>
-      <Panel title="Inbox" icon={MessageSquare} className="h-[460px]">
+      <Panel title="Inbox" icon={MessageSquare} className="h-[460px] lg:col-span-2">
         <div className="grid h-full min-w-0 grid-cols-5">
           <div className="col-span-2 min-w-0 border-r">
             {chats.map((c) => (
@@ -97,7 +96,6 @@ function Retail({ b, view }: { b: Business; view?: "contact" | "crm" | "operatio
           </div>
         </div>
       </Panel>
-      <TryAsCustomer className="order-last h-[460px] lg:order-none lg:col-start-2 lg:row-start-1" />
       </>}
       {(!view || view === "operations") && <>
       <Panel title="Deliveries" icon={Truck} className="h-[460px] lg:col-span-2">
@@ -190,7 +188,6 @@ function Clinic({ b, view }: { b: Business; view?: "contact" | "crm" | "operatio
         </table>
       </Panel>
       </>}
-      {(!view || view === "contact") && <TryAsCustomer className="h-[460px] lg:col-span-5" />}
     </div>
   );
 }

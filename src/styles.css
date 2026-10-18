@@ -241,3 +241,14 @@
 @media (prefers-reduced-motion: reduce) {
   .a2a-map .react-flow__edge-path { transition: none; }
 }
+
+.app-data-table td { overflow-wrap: anywhere; }
+@media (max-width: 639px) {
+  .app-data-table, .app-data-table tbody { display: block; }
+  .app-data-table thead { display: none; }
+  .app-data-table tr { display: grid; grid-template-columns: minmax(0, 1fr); padding: 16px 20px; border-top: 1px solid var(--border); }
+  .app-data-table td { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 12px; padding: 8px 0; }
+  .app-data-table td::before { content: attr(data-label); color: var(--muted-foreground); font-size: 11px; font-weight: 400; }
+  .app-data-table td > p { grid-column: 2; }
+  .app-data-table td > span { justify-self: start; }
+}
