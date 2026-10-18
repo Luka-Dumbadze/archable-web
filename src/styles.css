@@ -93,12 +93,13 @@
   --success: oklch(0.72 0.17 155);
   --warning: oklch(0.8 0.15 80);
   --border: oklch(1 0 0 / 8%);
-  --app-contact: oklch(0.623 0.188 259.8);
-  --app-crm: oklch(0.769 0.165 70.1);
-  --app-storage: oklch(0.704 0.191 22.2);
-  --app-team: oklch(0.718 0.202 349.8);
-  --app-analytics: oklch(0.765 0.177 163.2);
-  --app-operations: oklch(0.702 0.183 293.5);
+  --app-contact: oklch(0.546 0.245 262.881);
+  --app-crm: oklch(0.666 0.179 58.318);
+  --app-storage: oklch(0.577 0.245 27.325);
+  --app-team: oklch(0.592 0.249 0.584);
+  --app-analytics: oklch(0.596 0.145 163.225);
+  --app-operations: oklch(0.541 0.281 293.009);
+  --app-badge-foreground: oklch(0.99 0 0);
   --shadow-dock: 0 12px 40px oklch(0 0 0 / 35%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.39 0.12 7);
@@ -195,16 +196,47 @@
   --xy-controls-box-shadow: none;
 }
 .graph-edge-label { position: absolute; pointer-events: all; }
-.app-tile:hover { background: var(--card-hover); border-color: var(--border-hover); }
+.app-tile:hover { background: var(--card-hover); border-color: color-mix(in oklab, var(--app-color) 65%, var(--border)); }
 .app-contact { --app-color: var(--app-contact); }
 .app-crm { --app-color: var(--app-crm); }
 .app-storage { --app-color: var(--app-storage); }
 .app-team { --app-color: var(--app-team); }
 .app-analytics { --app-color: var(--app-analytics); }
 .app-operations { --app-color: var(--app-operations); }
-.app-badge { color: var(--app-color); background: color-mix(in oklab, var(--app-color) 14%, transparent); }
+.app-badge { color: var(--app-badge-foreground); background: var(--app-color); box-shadow: 0 4px 18px color-mix(in srgb, var(--app-color) 30%, transparent); }
+.app-badge:hover { background: var(--app-color); filter: brightness(1.12); }
 .quick-dock { box-shadow: var(--shadow-dock); }
-.workspace-os { letter-spacing: 0; }
+.workspace-os {
+  letter-spacing: 0;
+  --background: oklch(0.141 0.005 285.8);
+  --card: oklch(0.184 0.006 285.8);
+  --foreground: oklch(0.97 0.003 286);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.184 0.006 285.8);
+  --popover-foreground: var(--foreground);
+  --secondary: oklch(0.21 0.006 285.9);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--secondary);
+  --muted-foreground: oklch(0.65 0.01 286);
+  --accent: oklch(0.24 0.006 286);
+  --accent-foreground: var(--foreground);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+}
+.workspace-light {
+  --background: oklch(0.98 0.002 286);
+  --foreground: oklch(0.22 0.006 286);
+  --card: oklch(1 0 0);
+  --card-hover: oklch(0.96 0.003 286);
+  --popover: oklch(1 0 0);
+  --secondary: oklch(0.94 0.004 286);
+  --muted-foreground: oklch(0.47 0.01 286);
+  --accent: oklch(0.91 0.005 286);
+  --border: oklch(0.22 0.006 286 / 12%);
+  --input: oklch(0.22 0.006 286 / 10%);
+}
+.dock-button { width: 38px; height: 38px; }
+@media (min-width: 640px) { .dock-button { width: 44px; height: 44px; } }
 .a2a-map .react-flow__edge-path { transition: stroke 150ms, stroke-width 150ms; }
 @media (prefers-reduced-motion: reduce) {
   .a2a-map .react-flow__edge-path { transition: none; }
