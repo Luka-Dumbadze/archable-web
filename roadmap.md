@@ -1,3 +1,4 @@
+- [ ] Redesign the main Workspace Apps launcher with six cards, system navigation, quick dock, existing app views, and desktop/360px verification without changing maintained modules.
 - [x] Add structured desires above existing developer demo desires without duplicate D-14; 20 tests pass and desktop/360 px checks verify unlink persistence, updated rationale and sources, empty chats, and reset without horizontal overflow or runtime errors.
 - [ ] Verify live structured desires and unlinking: requires an authenticated tenant and the external service's proposed desire endpoints; demo and maintained contract tests are verified.
 - [x] Add the owner Architect chat with unchanged helpers, action controls, and owner rationale sheet; 28 tests pass and the demo send → draft → reasons → close flow works on desktop and 360 px with no overflow or runtime errors.
