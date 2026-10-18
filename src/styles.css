@@ -281,6 +281,10 @@
   --body-foreground: oklch(0.35 0.006 286);
   --divider: oklch(0.22 0.006 286 / 8%);
   --border-hover: oklch(0.22 0.006 286 / 20%);
+  /* Status pills stay sharp on light surfaces: deep text, pale tint. */
+  --customer-accent: oklch(0.45 0.16 265);
+  --warning: oklch(0.5 0.13 70);
+  --success: oklch(0.45 0.14 155);
 }
 .dock-button { width: 38px; height: 38px; }
 @media (min-width: 640px) { .dock-button { width: 44px; height: 44px; } }
