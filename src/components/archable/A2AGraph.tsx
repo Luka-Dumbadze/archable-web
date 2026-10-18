@@ -24,7 +24,7 @@ function AppNode({ data, selected }: NodeProps<Node<A2ANodeData>>) {
     <div className="mt-1 font-mono text-[8px] text-muted-foreground">{data.external ? "MCP External" : "In-Process Engine"}</div>
     <div className="mt-1 flex flex-wrap items-center justify-between gap-1 font-mono text-[9px]"><span>p50: {latency === null ? "—" : `${latency}ms`}{telemetry.demo && latency !== null ? " · sample" : ""}</span><span className="rounded border px-1 text-muted-foreground">{data.node.tools.length} Tools Mounted</span></div>
     <Handle type="source" position={Position.Right} />
-  </div></Telemetry.Provider>;
+  </div>;
 }
 
 /** Polyline through the layout's route with slightly rounded corners (radius 8 px where the segments allow). */
@@ -133,7 +133,7 @@ export default function A2AGraph() {
     </div>
     <div className="relative min-h-0 flex-1">
     <SelectEdge.Provider value={setSelected}><ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onInit={setInstance} minZoom={0.15} maxZoom={2} nodesDraggable={false} nodesConnectable={false} onEdgeClick={(_, e) => setSelected(e.id)} onPaneClick={() => setSelected(null)}>
-      <Background gap={24} color="var(--border)" /><Controls showInteractive={false} />
+      <Background gap={24} color="var(--telemetry-grid)" /><Controls showInteractive={false} />
     </ReactFlow></SelectEdge.Provider>
     {query.trim() && <div role="status" className="absolute left-3 top-3 rounded border bg-background px-2 py-1 text-xs text-muted-foreground">{nodes.filter((n) => n.selected).length} matches</div>}
     <details className="absolute bottom-3 right-3 w-[calc(100%-70px)] rounded-md border bg-background text-xs md:hidden">
