@@ -1,0 +1,16 @@
+{
+  "name": "archable-live-check",
+  "private": true,
+  "type": "module",
+  "description": "Live runs of DEV-1's open checks against the deployed API and web app (archable PROGRESS.md). Not part of the Lovable build.",
+  "scripts": {
+    "check": "node live-check.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "playwright-core": "1.56.1",
+    "postgres": "3.4.9"
+  }
+}
