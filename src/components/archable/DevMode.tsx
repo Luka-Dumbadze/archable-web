@@ -42,13 +42,13 @@ export function DevMode({ b }: { b: Business }) {
         </ClientOnly>
       </section>
       </TabsContent>
-      <TabsContent value="desires" className="evolution-view mt-0">
+      <TabsContent value="desires" className="window-theme evolution-view mt-0">
       <section aria-label="Desires">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b pb-7"><div className="flex items-center gap-4"><span className="app-badge app-operations flex size-12 shrink-0 items-center justify-center rounded-2xl"><Sparkles className="size-6" /></span><h2 className="text-xl font-semibold">Evolution &amp; Changes</h2></div><span className="pill border text-muted-foreground">{load.state === "ready" && load.demo ? "Sample changes" : "Business changes"}</span></header>
         <div className="space-y-5">
           <StructuredDesiresFeed load={load} unlink={unlink} unlinking={unlinking} error={error} resetDemo={resetDemo} />
           {desires.filter((d) => !(d.id === "D-14" && load.state === "ready" && load.desires.some((desire) => desire.number === 14))).map((d) => (
-            <article key={d.id} className="surface-interactive min-w-0 overflow-hidden rounded-2xl border bg-card p-6 sm:p-8">
+            <article key={d.id} className="change-card surface-interactive min-w-0 p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground">
                 <span className="mr-auto text-foreground">{d.id}</span><span className="pill border bg-secondary">{d.status}</span><span className="pill border">{d.tier}</span>
               </div>
@@ -56,7 +56,7 @@ export function DevMode({ b }: { b: Business }) {
               <div className="mt-3 flex flex-wrap items-center gap-1 font-mono text-[11px] text-muted-foreground">
                 {d.witness.map((w, i) => <span key={w} className="flex max-w-full items-center gap-2 [overflow-wrap:anywhere]"><span className="pill border bg-background">{w}</span>{i < d.witness.length - 1 && <ArrowRight className="size-3 shrink-0" />}</span>)}
               </div>
-              <div className="mt-6 flex flex-wrap gap-3 border-t pt-5">
+              <div className="change-actions flex flex-wrap gap-3">
                 {d.pr && <Button size="sm" onClick={() => toast(`PR ${d.pr}`)}><GitPullRequest /> Review PR</Button>}
                 <Button size="sm" variant="outline" onClick={() => setWhy(d)}><Info /> Why</Button>
               </div>
@@ -67,7 +67,7 @@ export function DevMode({ b }: { b: Business }) {
       </TabsContent>
 
       <Dialog open={!!why} onOpenChange={(o) => !o && setWhy(null)}>
-        <DialogContent className="workspace-os max-h-[85dvh] overflow-y-auto" aria-describedby={undefined}>
+        <DialogContent className="workspace-os window-theme chat-window max-h-[85dvh] overflow-y-auto rounded-2xl" aria-describedby={undefined}>
           {why && (<>
             <DialogHeader><DialogTitle className="break-words pr-4 [overflow-wrap:anywhere]">{why.title}</DialogTitle></DialogHeader>
             {rationale ? <RationaleCard card={rationale} mode="developer" /> : <div className="space-y-4 text-sm">
