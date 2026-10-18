@@ -15,7 +15,7 @@ export function WaitingForYou({ businessId }: { businessId: string }) {
         <Button variant="outline" size="sm" onClick={() => setSelected(changes[0] ?? null)}>View rationale</Button>
       </section>
       <Sheet open={selected !== null} onOpenChange={(open) => { if (!open) setSelected(null); }}>
-        <SheetContent className="workspace-os w-[calc(100%-16px)] overflow-y-auto sm:max-w-lg" aria-describedby={undefined}>
+        <SheetContent className="workspace-os w-full overflow-y-auto sm:max-w-lg" aria-describedby={undefined}>
           {selected && <>
             <SheetHeader className="mb-6 pr-6 text-left">
               <SheetTitle className="break-words [overflow-wrap:anywhere]">{selected.title}</SheetTitle>

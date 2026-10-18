@@ -37,8 +37,8 @@ export function DevMode({ b }: { b: Business }) {
       <TabsContent value="activity" className="mt-0"><TeamActivity /></TabsContent>
       <TabsContent value="architecture" className="mt-0 pb-24">
       <section aria-label="App map" className="h-[600px] min-w-0 sm:h-[680px]">
-        <ClientOnly fallback={<div className="h-full bg-muted/30" />}>
-          <Suspense fallback={<div className="h-full bg-muted/30" />}><A2AGraph /></Suspense>
+        <ClientOnly fallback={<div className="h-full rounded-lg border bg-card" />}>
+          <Suspense fallback={<div className="h-full rounded-lg border bg-card" />}><A2AGraph /></Suspense>
         </ClientOnly>
       </section>
       </TabsContent>
