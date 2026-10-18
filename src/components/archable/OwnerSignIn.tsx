@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Boxes } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { completeSignIn } from "@/auth/web-link";
+import { tenantFromHost } from "@/chat/session";
 import { supabase } from "@/lib/supabase";
 
 type Status = "waiting" | "ok" | "expired" | "none" | "unavailable";
@@ -39,7 +40,7 @@ export function OwnerSignIn() {
         </h1>
         <p role="status" aria-live="polite" className="text-sm leading-relaxed [overflow-wrap:anywhere]">{messages[status]}</p>
         {status === "ok" && (
-          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/" })}>
+          <Button className="mt-6 w-full" onClick={() => void navigate({ to: "/", search: { biz: tenantFromHost(window.location.hostname)?.slug ?? "" } })}>
             Open Owner Mode
           </Button>
         )}
