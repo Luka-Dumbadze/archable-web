@@ -319,6 +319,29 @@
 .overlay-surface { background: var(--card); box-shadow: var(--shadow-overlay); }
 .sales-bar { background: var(--app-analytics); box-shadow: var(--shadow-chart); border-top-left-radius: 6px; border-top-right-radius: 6px; }
 .sales-chart { background-image: repeating-linear-gradient(to top, var(--divider) 0, var(--divider) 1px, transparent 1px, transparent 25%); }
+.modern-chat [role=log] { background: var(--background); padding: 28px 32px; }
+.modern-chat [role=log] div.bg-primary, .modern-chat [role=log] div.bg-secondary { padding: 14px 20px; line-height: 1.75; margin-top: 20px; }
+.modern-chat form { margin: 0; border: 0; padding: 20px 24px; gap: 12px; background: var(--card); }
+.modern-chat form input { min-height: 48px; height: 48px; border: 1px solid var(--border); border-radius: 12px; padding: 0 16px; background: var(--background); }
+.modern-chat form button[type=submit] { min-height: 48px; min-width: 48px; }
+.business-chat > section { height: 100dvh; border: 0; border-radius: 0; }
+.business-chat > section > header { min-height: 132px; padding: 32px 48px 28px 96px; }
+.business-chat > section > header h3 { font-size: 20px; line-height: 1.4; }
+.business-chat > section > header p { margin-top: 8px; line-height: 1.65; }
+.business-chat-badge { position: absolute; top: 34px; left: 24px; z-index: 1; display: flex; width: 48px; height: 48px; align-items: center; justify-content: center; border-radius: 16px; }
+.business-chat-empty { display: none; position: absolute; inset: 132px 0 88px; align-items: center; justify-content: center; pointer-events: none; }
+.business-chat:has([role=log]:empty) .business-chat-empty { display: flex; }
+.business-chat [role=log] > div > div.flex { margin-top: 16px; gap: 10px; }
+.business-chat [role=log] button { min-height: 36px; padding: 8px 14px; border-radius: 999px; }
+.change-tabs [role=tab] { border-radius: 0; background: transparent; border-bottom: 2px solid transparent; padding: 14px 0; box-shadow: none; color: var(--muted-foreground); font-size: 12px; }
+.change-tabs [role=tab][data-state=active] { background: transparent; border-bottom-color: var(--primary); color: var(--foreground); box-shadow: none; }
+@media (max-width: 639px) {
+  .modern-chat [role=log] { padding: 20px; }
+  .modern-chat form { padding: 16px; }
+  .business-chat > section > header { padding-left: 84px; padding-right: 40px; }
+  .business-chat-badge { left: 20px; width: 44px; height: 44px; }
+  .business-chat > section > header h3 { font-size: 18px; }
+}
 @media (max-width: 639px) {
   .app-data-table tbody td { padding: 8px 0; }
 }

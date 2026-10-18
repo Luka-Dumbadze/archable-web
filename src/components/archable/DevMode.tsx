@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { GitPullRequest, Info, ArrowRight } from "lucide-react";
+import { GitPullRequest, Info, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -42,24 +42,25 @@ export function DevMode({ b }: { b: Business }) {
         </ClientOnly>
       </section>
       </TabsContent>
-      <TabsContent value="desires" className="mt-0">
+      <TabsContent value="desires" className="evolution-view mt-0">
       <section aria-label="Desires">
+        <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b pb-7"><div className="flex items-center gap-4"><span className="app-badge app-operations flex size-12 shrink-0 items-center justify-center rounded-2xl"><Sparkles className="size-6" /></span><h2 className="text-xl font-semibold">Evolution &amp; Changes</h2></div><span className="pill border text-muted-foreground">{load.state === "ready" && load.demo ? "Sample changes" : "Business changes"}</span></header>
         <div className="space-y-5">
           <StructuredDesiresFeed load={load} unlink={unlink} unlinking={unlinking} error={error} resetDemo={resetDemo} />
           {desires.filter((d) => !(d.id === "D-14" && load.state === "ready" && load.desires.some((desire) => desire.number === 14))).map((d) => (
-            <div key={d.id} className="min-w-0 rounded-lg border bg-card p-5 sm:p-6">
+            <article key={d.id} className="surface-interactive min-w-0 overflow-hidden rounded-2xl border bg-card p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-muted-foreground">
-                <span className="text-foreground">{d.id}</span>· {d.status} · {d.tier}
+                <span className="mr-auto text-foreground">{d.id}</span><span className="pill border bg-secondary">{d.status}</span><span className="pill border">{d.tier}</span>
               </div>
-              <div className="mt-2 text-sm font-medium">{d.title}</div>
+              <h3 className="mt-5 max-w-2xl text-lg font-semibold leading-relaxed [overflow-wrap:anywhere]">{d.title}</h3>
               <div className="mt-3 flex flex-wrap items-center gap-1 font-mono text-[11px] text-muted-foreground">
-                {d.witness.map((w, i) => <span key={w} className="flex items-center gap-1">{w}{i < d.witness.length - 1 && <ArrowRight className="size-3" />}</span>)}
+                {d.witness.map((w, i) => <span key={w} className="flex max-w-full items-center gap-2 [overflow-wrap:anywhere]"><span className="pill border bg-background">{w}</span>{i < d.witness.length - 1 && <ArrowRight className="size-3 shrink-0" />}</span>)}
               </div>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-6 flex flex-wrap gap-3 border-t pt-5">
                 {d.pr && <Button size="sm" onClick={() => toast(`PR ${d.pr}`)}><GitPullRequest /> Review PR</Button>}
-                <Button size="sm" variant="ghost" onClick={() => setWhy(d)}><Info /> Why</Button>
+                <Button size="sm" variant="outline" onClick={() => setWhy(d)}><Info /> Why</Button>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
