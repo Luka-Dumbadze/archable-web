@@ -59,7 +59,7 @@ export function Workspace({ business, mode, view = "apps" }: { business: Busines
         <Hint label="Owner"><Button size="icon" variant="ghost" asChild className={`dock-button shrink-0 rounded-xl ${mode === "owner" && view === "owner" ? "bg-secondary" : "text-muted-foreground"}`}><Link to="/" search={{ biz: business.id, view: "owner" }} aria-label="Owner Mode"><UserRound /></Link></Button></Hint>
         <Hint label="Developer"><Button size="icon" variant="ghost" asChild className={`dock-button shrink-0 rounded-xl ${mode === "dev" ? "bg-secondary" : "text-muted-foreground"}`}><Link to="/dev" search={{ biz: business.id }} aria-label="Developer Mode"><Code2 /></Link></Button></Hint>
       </nav>
-      <Dialog open={testing} onOpenChange={setTesting}><DialogContent key={business.id} className={`workspace-os ${themeClass} max-w-[calc(100%-24px)] rounded-2xl border bg-background p-0 text-foreground sm:max-w-xl`} aria-labelledby="try-customer-title" aria-describedby={undefined}><TryAsCustomer className="h-[min(560px,75dvh)] border-0 pr-2" /></DialogContent></Dialog>
+      <Dialog open={testing} onOpenChange={setTesting}><DialogContent key={business.id} className={`workspace-os ${themeClass} max-w-[calc(100%-24px)] rounded-2xl border bg-background p-0 text-foreground sm:max-w-xl`} aria-labelledby="try-customer-title" aria-describedby={undefined}><TryAsCustomer className="h-[min(560px,75dvh)] border-0 [&_header]:pr-12" /></DialogContent></Dialog>
     </div>
   </TooltipProvider>;
 }
