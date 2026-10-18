@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChatMessage } from "@/contracts";
-import { ChatUnavailable, chatClient, loadGreeting, tenantFromHost } from "./session";
+import { ChatUnavailable, chatClient, loadGreeting, tenantFromLocation } from "./session";
 
 type Bubble = { key: string; id?: number; author: ChatMessage["author"]; text: string; optimistic?: boolean };
 
@@ -18,7 +18,7 @@ export function useChat(demoName: string, lang?: string) {
     let replyVersion = 0;
     const abort = new AbortController();
     const timers = new Set<ReturnType<typeof setTimeout>>();
-    const tenant = tenantFromHost(window.location.hostname);
+    const tenant = tenantFromLocation(window.location);
     setTenantName(tenant?.slug ?? null);
     setMessages([]);
     setGreeting(null);
